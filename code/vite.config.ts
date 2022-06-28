@@ -12,4 +12,10 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
+  server: {
+    hmr: {
+      protocol: "ws",
+      port: 8090,
+    },
+  },
 })
