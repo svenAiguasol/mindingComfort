@@ -1,5 +1,5 @@
 <template>
-  <div ref="root">
+  <div class="relative" ref="root">
     <!-- top Banner ################################## -->
     <div class="top-banner relative w-full h-100">
       <div
@@ -100,6 +100,22 @@
               más de rendimiento
             </h2>
           </div>
+
+          <div
+            class="bg-gradient-to-tr shadow-lg from-orange-600 to-rose-600 md:w-60 w-full md:h-96 md:rounded-xl text-center p-12"
+          >
+            <img
+              class="w-28 inline-block mt-10"
+              src="img/icono_comunidad.svg"
+              alt=""
+            />
+            <br />
+            <h2 class="text-white leading-[25px] mt-10 text-xl">
+              Hasta <br />
+              <b class="text-4xl">100%</b> <br />
+              más de felicidad
+            </h2>
+          </div>
         </div>
       </div>
 
@@ -126,10 +142,13 @@
               alt=""
             />
             <div class="w-full shadow-lg p-5 bg-white">
+              <h1 class="text-gray-700 text-left text-xl mb-5">
+                {{ benefit.title }}
+              </h1>
               <p class="text-justify">{{ benefit.txt }}</p>
               <a
                 href=""
-                class="rounded-full mt-5 p-1 text-lg inline-block bg-gradient-to-r from-sky-500 to-blue-600 text-white xl:w-1/2 md:w-3/4"
+                class="rounded-full mt-5 p-1 text-lg inline-block bg-gradient-to-r from-sky-500 to-blue-600 text-white xl:w-1/2 px-10 md:w-3/4"
                 >{{ benefit.btn }}</a
               >
             </div>
@@ -276,7 +295,7 @@
     <div
       class="w-full mt-5 bg-gradient-to-tr from-sky-500 to-blue-600 text-white text-left p-5 flex place-items-center items-center justify-items-center justify-center"
     >
-      <div class="md:w-1/2 w-full pt-5">
+      <div class="md:w-1/3 w-full pt-5">
         <ul class="list-disc ml-5 mb-5">
           <li>Mínimo de 10 salas/espacios por establecimiento</li>
           <li>
@@ -295,7 +314,166 @@
       </h1>
     </div>
 
-    <br /><br />
+    <div class="w-full mt-10 xl:px-60 flex justify-center flex-wrap">
+      <div
+        class="w-2/3 grid grid-cols-6 self-center gap-y-5 place-self-center place-items-center md:place-items-left mt-10"
+        v-for="(instruccion, i) in instrucciones"
+        :key="i"
+      >
+        <div
+          class="md:col-span-1 col-span-6 xl:col-start-2 md:col-start-2 col-start-0"
+        >
+          <div
+            class="hexagon bg-gradient-to-tr from-lime-500 to-green-800 relative"
+          >
+            <div
+              class="hexagon hexagon-content absolute center flex justify-center items-center bg-white"
+            >
+              <h1 class="text-2xl text-green-600">{{ i + 1 }}</h1>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:col-span-3 col-span-6 text-left">
+          <h1 class="text-2xl text-gray-700 w-full text-center md:text-left">
+            {{ instruccion.title }}
+          </h1>
+          <br />
+          <p>
+            Llámanos, escríbenos, llena el formularo, ven a vernos, cómo gustes
+          </p>
+          <div
+            class="flex gap-4 mt-5 justify-center md:justify-start"
+            v-if="instruccion.btns.length > 1"
+          >
+            <img
+              class="w-20"
+              v-for="(btn, i) in instruccion.btns"
+              :key="i"
+              v-bind:src="'img/' + btn.icon"
+              alt=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-full mt-20">
+      <h1
+        class="text-gray-700 leading-snug md:mt-10 mt-10 text-2xl text-center w-full"
+      >
+        Formulario de solicitud de servicio
+      </h1>
+      <p class="text-center w-full">
+        Llena y envía el formulario y te contactaremos en menos de 48 horas
+      </p>
+    </div>
+
+    <div
+      class="w-full mt-5 px-20 bg-gradient-to-tr from-sky-500 to-blue-600 text-white text-left p-5 flex place-items-center items-center justify-items-center justify-center"
+    >
+      <div class="md:w-1/3 flex justify-center">
+        <div class="w-full grid grid-cols-2 gap-x-10">
+          <div class="col-span-2 mt-5">
+            <p class="w-full text-center">Nombre persona de contacto</p>
+            <input
+              class="w-full rounded-md mt-5 h-10 text-black p-5"
+              type="text"
+            />
+            <p class="w-full text-center mt-5">Nombre de establecimiento</p>
+            <input
+              class="w-full rounded-md mt-5 h-10 text-black p-5"
+              type="text"
+            />
+          </div>
+          <div class="col-span-1 mt-5">
+            <p class="w-full text-center">Región</p>
+            <input
+              class="w-full rounded-md mt-5 h-10 text-black p-5"
+              type="text"
+            />
+            <p class="w-full text-center mt-5">Comuna</p>
+            <input
+              class="w-full rounded-md mt-5 h-10 text-black p-5"
+              type="text"
+            />
+          </div>
+          <div class="col-span-1 mt-5">
+            <p class="w-full text-center">Teléfono</p>
+            <input
+              class="w-full rounded-md mt-5 h-10 text-black p-5"
+              type="text"
+            />
+            <p class="w-full text-center mt-5">Correo electrónico</p>
+            <input
+              class="w-full rounded-md mt-5 h-10 text-black p-5"
+              type="text"
+            />
+          </div>
+          <div class="col-span-2 mt-10 text-center flex justify-center">
+            <a
+              class="border-white border-2 w-80 block text-center rounded-full p-2"
+              >Enviar solicitud</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="w-full xl:h-[450px] h-[600px] footer"></div>
+    <div
+      class="w-full xl:h-[450px] h-[600px] footer bg-zinc-800 absolute bottom-0"
+    >
+      <div class="w-full flex justify-center">
+        <div class="w-1/2 grid grid-cols-3 place-items-center">
+          <div class="col-span-3 mb-10 mt-20">
+            <p class="text-white text-center">
+              <a href="">
+                <img class="w-20" src="img/icono_instragram.svg" alt="" />
+              </a>
+            </p>
+          </div>
+          <div
+            class="xl:col-span-1 col-span-3 flex justify-center items-center mt-5"
+          >
+            <img
+              src="img/telefono_blanco.svg"
+              class="fill-white w-12 grayscale-0"
+              alt=""
+            />
+            <p class="ml-5 text-white text-lg">+56 88 888 888</p>
+          </div>
+          <div
+            class="xl:col-span-1 col-span-3 flex justify-center items-center mt-5"
+          >
+            <img
+              src="img/mapa_blanco.svg"
+              class="fill-white w-12 grayscale-0"
+              alt=""
+            />
+            <p class="ml-5 text-white text-lg">
+              Av. Importante #8888, Santiago, Chile
+            </p>
+          </div>
+          <div
+            class="xl:col-span-1 col-span-3 flex justify-center items-center mt-5"
+          >
+            <img
+              src="img/mail_blanco.svg"
+              class="fill-white w-12 grayscale-0"
+              alt=""
+            />
+            <p class="ml-5 text-white text-lg">hola@comfort.minding.ai</p>
+          </div>
+          <div class="col-span-3 mt-10">
+            <p class="text-white text-center">
+              <a href="">
+                <img class="h-20" src="img/minding_blanco.svg" alt="" />
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script setup>
@@ -313,24 +491,28 @@ comfortIcons.value = [
 const benefits = ref()
 benefits.value = [
   {
+    title: "Monitorizar las condiciones",
     img: "value_spec_1.png",
     txt: "Con nuestra red de monitoreo, sabrás en cada momento las condiciones de cada aula, lo que te permitirá saber cuáles son.",
     btn: "ver tecnología",
     lnk: "",
   },
   {
+    title: "Clasificar, analizar y recomendar",
     img: "value_spec_2.png",
     txt: "Gracias a los reportes sabrás cuáles son las aulas que requieren más atención, y qué problemas tiene cada aula. De esta es mucho más fácil encontrar soluciones específicas.",
     btn: "ver demo",
     lnk: "",
   },
   {
+    title: "Acompañarte en el proceso",
     img: "value_spec_3.png",
     txt: "Recibe recomendaciones tecnológicas específicas para cada aula de manera automática y solicita el acompañamiento contínuo para hacer tus proyectos realidad.",
     btn: "ver condiciones de servicio",
     lnk: "",
   },
   {
+    title: "Integrar a la comunidad",
     img: "value_spec_4.png",
     txt: "Con nuestro sistema de alertas, puedes involucrar a profesores y personal auxiliar para tomar acciones inmediatas ante eventualidades. Por ejemplo, '¡ventila la sala al salir al recreo porfavor!'.",
     btn: "ver tarifas de servicio",
@@ -395,6 +577,29 @@ tarifas.value = [
     price: "A convenir / mes",
   },
 ]
+const instrucciones = ref()
+instrucciones.value = [
+  {
+    title: "Declara tu interés",
+    txt: "Llámanos, escríbenos, llena el formularo, ven a vernos, cómo gustes.",
+    btns: [
+      { icon: "icono_telefono.svg", lnk: "" },
+      { icon: "icono_mail.svg", lnk: "" },
+      { icon: "icono_formulario.svg", lnk: "" },
+      { icon: "icono_mapa.svg", lnk: "" },
+    ],
+  },
+  {
+    title: "Vamos a terreno",
+    txt: "Uno de nuestros instaladores acudirá al establecimiento, levantará los datos de cada aula y posteriormente instalará la red de monitorización.",
+    btns: [{ icon: "", lnk: "" }],
+  },
+  {
+    title: "Recibe los beneficios",
+    txt: "Te capacitamos a ti y a tu equipo a usar las herramientas y cuidar la red de monitorización.",
+    btns: [{ icon: "", lnk: "" }],
+  },
+]
 </script>
 <style>
 .score {
@@ -407,5 +612,28 @@ tarifas.value = [
   width: 12px;
   background-color: #333;
   margin-right: 30px;
+}
+.hexagon {
+  position: relative;
+  height: 80px;
+  width: 80px;
+}
+.hexagon,
+.hexagon:before {
+  -webkit-clip-path: polygon(
+    50% 0%,
+    100% 25%,
+    100% 75%,
+    50% 100%,
+    0% 75%,
+    0% 25%
+  );
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+.hexagon-content {
+  top: 12px;
+  left: 12px;
+  height: calc(100% - 24px);
+  width: calc(100% - 24px);
 }
 </style>
