@@ -48,7 +48,7 @@
           >
             <img
               class="xl:w-[90px] w-[60px] z-10 relative inline-block"
-              v-bind:src="'val.img'"
+              v-bind:src="val.img"
               alt=""
             />
             <p
