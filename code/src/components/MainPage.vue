@@ -1,7 +1,7 @@
 <template>
   <div class="relative" ref="root">
     <!-- top Banner ################################## -->
-    <div class="top-banner relative w-full h-100">
+    <div id="home" class="top-banner relative w-full h-100">
       <div
         class="w-full h-screen bg-[url('img/fondo_top.jpg')] md:bg-cover bg-[length:1200px] bg-center bg-no-repeat"
         alt=""
@@ -111,9 +111,9 @@
             />
             <br />
             <h2 class="text-white leading-[25px] mt-10 text-xl">
-              Hasta <br />
+              Garantizado,
               <b class="text-4xl">100%</b> <br />
-              más de felicidad
+              comunidad más feliz
             </h2>
           </div>
         </div>
@@ -121,6 +121,7 @@
 
       <div class="md:w-1/2 w-full mt-10">
         <h1
+          id="como-funciona"
           class="text-gray-700 leading-snug md:mt-20 mt-40 text-4xl text-center w-full"
         >
           Y haremos todo lo posible para que lo consigas
@@ -147,7 +148,7 @@
               </h1>
               <p class="text-justify">{{ benefit.txt }}</p>
               <a
-                href=""
+                v-bind:href="benefit.lnk"
                 class="rounded-full mt-5 p-1 text-lg inline-block bg-gradient-to-r from-sky-500 to-blue-600 text-white xl:w-1/2 px-10 md:w-3/4"
                 >{{ benefit.btn }}</a
               >
@@ -199,7 +200,8 @@
       </div>
 
       <div
-        class="w-full md:mt-20 md:h-screen mt-10 h-80 bg-[url('img/fondo_sensor.jpg')] md:bg-cover bg-[length:600px] bg-center bg-no-repeat"
+        id="tecnologia"
+        class="w-full md:mt-20 mt-10 md:h-[600px] h-96 bg-[url('img/fondo_sensor.jpg')] md:bg-[length:1200px] bg-[length:600px] bg-center bg-no-repeat"
         alt=""
       ></div>
 
@@ -251,6 +253,7 @@
 
     <div class="w-full mt-5">
       <h1
+        id="tarifas"
         class="text-gray-700 leading-snug md:mt-20 mt-10 text-4xl text-center w-full"
       >
         Tarifas de servicio
@@ -308,6 +311,7 @@
 
     <div class="w-full mt-5">
       <h1
+        id="cotiza"
         class="text-gray-700 leading-snug md:mt-20 mt-10 text-4xl text-center w-full"
       >
         Contrata Minding Comfort
@@ -495,28 +499,28 @@ benefits.value = [
     img: "value_spec_1.png",
     txt: "Con nuestra red de monitoreo, sabrás en cada momento las condiciones de cada aula, lo que te permitirá saber cuáles son.",
     btn: "ver tecnología",
-    lnk: "",
+    lnk: "#tecnologia",
   },
   {
     title: "Clasificar, analizar y recomendar",
     img: "value_spec_2.png",
     txt: "Gracias a los reportes sabrás cuáles son las aulas que requieren más atención, y qué problemas tiene cada aula. De esta es mucho más fácil encontrar soluciones específicas.",
     btn: "ver demo",
-    lnk: "",
+    lnk: "/demo",
   },
   {
     title: "Acompañarte en el proceso",
     img: "value_spec_3.png",
     txt: "Recibe recomendaciones tecnológicas específicas para cada aula de manera automática y solicita el acompañamiento contínuo para hacer tus proyectos realidad.",
-    btn: "ver condiciones de servicio",
-    lnk: "",
+    btn: "ver tarifas de servicio",
+    lnk: "#tarifas",
   },
   {
     title: "Integrar a la comunidad",
     img: "value_spec_4.png",
     txt: "Con nuestro sistema de alertas, puedes involucrar a profesores y personal auxiliar para tomar acciones inmediatas ante eventualidades. Por ejemplo, '¡ventila la sala al salir al recreo porfavor!'.",
     btn: "ver tarifas de servicio",
-    lnk: "",
+    lnk: "#tarifas",
   },
 ]
 
