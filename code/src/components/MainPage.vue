@@ -48,7 +48,7 @@
           >
             <img
               class="xl:w-[90px] w-[60px] z-10 relative inline-block"
-              v-bind:src="val.img"
+              v-bind:src="'val.img'"
               alt=""
             />
             <p
@@ -75,7 +75,7 @@
           >
             <img
               class="w-28 inline-block mt-10"
-              src="./img/icono_enfermedad.svg"
+              :src="'img/icono_enfermedad.svg'"
               alt=""
             />
             <br />
@@ -90,7 +90,7 @@
           >
             <img
               class="w-28 inline-block mt-10"
-              src="./img/icono_rendimiento.svg"
+              :src="'img/icono_rendimiento.svg'"
               alt=""
             />
             <br />
@@ -106,7 +106,7 @@
           >
             <img
               class="w-28 inline-block mt-10"
-              src="./img/icono_comunidad.svg"
+              :src="'img/icono_comunidad.svg'"
               alt=""
             />
             <br />
@@ -175,7 +175,7 @@
             <div
               class="bg-gradient-to-tr from-orange-500 to-pink-600 h-60 w-full rounded-t-lg flex items-center justify-center text-center p-10"
             >
-              <img class="h-40" v-bind:src="'img/' + segment.icon" alt="" />
+              <img class="h-40" v-bind:src="'img/' + segment.icon" alt="'" />
             </div>
             <div class="p-10 w-full h-full text-justify">
               <h1
@@ -432,7 +432,7 @@
           <div class="col-span-3 mb-10 mt-20">
             <p class="text-white text-center">
               <a href="">
-                <img class="w-20" src="./img/icono_instragram.svg" alt="" />
+                <img class="w-20" :src="'img/icono_instragram.svg'" alt="'" />
               </a>
             </p>
           </div>
@@ -440,7 +440,7 @@
             class="xl:col-span-1 col-span-3 flex justify-center items-center mt-5"
           >
             <img
-              src="./img/telefono_blanco.svg"
+              :src="'img/telefono_blanco.svg'"
               class="fill-white w-12 grayscale-0"
               alt=""
             />
@@ -450,7 +450,7 @@
             class="xl:col-span-1 col-span-3 flex justify-center items-center mt-5"
           >
             <img
-              src="./img/mapa_blanco.svg"
+              :src="'img/mapa_blanco.svg'"
               class="fill-white w-12 grayscale-0"
               alt=""
             />
@@ -462,7 +462,7 @@
             class="xl:col-span-1 col-span-3 flex justify-center items-center mt-5"
           >
             <img
-              src="./img/mail_blanco.svg"
+              :src="'img/mail_blanco.svg'"
               class="fill-white w-12 grayscale-0"
               alt=""
             />
@@ -471,7 +471,7 @@
           <div class="col-span-3 mt-10">
             <p class="text-white text-center">
               <a href="">
-                <img class="h-20" src="./img/minding_blanco.svg" alt="" />
+                <img class="h-20" :src="'img/minding_blanco.svg'" alt="'" />
               </a>
             </p>
           </div>
@@ -485,12 +485,12 @@ import { ref, onMounted, getCurrentInstance } from "vue"
 const props = defineProps(["mainData"])
 const comfortIcons = ref()
 comfortIcons.value = [
-  { img: "./img/icono_frio.svg", txt: "Frescos" },
-  { img: "./img/icono_calor.svg", txt: "Abrigados" },
-  { img: "./img/icono_humedad.svg", txt: "Sin excesos de humedad" },
-  { img: "./img/icono_ruido.svg", txt: "Con buena acústica" },
-  { img: "./img/icono_iluminacion.svg", txt: "Suficientemente iluminados" },
-  { img: "./img/icono_co2.svg", txt: "Con niveles de CO2 aceptables" },
+  { img: "img/icono_frio.svg", txt: "Frescos" },
+  { img: "img/icono_calor.svg", txt: "Abrigados" },
+  { img: "img/icono_humedad.svg", txt: "Sin excesos de humedad" },
+  { img: "img/icono_ruido.svg", txt: "Con buena acústica" },
+  { img: "img/icono_iluminacion.svg", txt: "Suficientemente iluminados" },
+  { img: "img/icono_co2.svg", txt: "Con niveles de CO2 aceptables" },
 ]
 const benefits = ref()
 benefits.value = [
