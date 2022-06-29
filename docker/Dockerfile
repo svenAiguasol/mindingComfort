@@ -1,8 +1,8 @@
-FROM node:16
+FROM node:lts
 
 WORKDIR /root
 COPY ./package.json .
-RUN npm install
+RUN npm install vite --location=global
 EXPOSE 3000
 #RUN apt-get -y install sudo
 #RUN echo "www-data:www-data" | chpasswd && adduser www-data sudo

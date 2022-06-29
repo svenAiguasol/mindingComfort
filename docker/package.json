@@ -15,7 +15,8 @@
     "vue": "^3.2.31",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.12",
-    "vue3-scroll-spy": "^1.0.8"
+    "vue3-scroll-spy": "^1.0.8",
+    "vite": "^2.9.0"
   },
   "devDependencies": {
     "@types/node": "^16.11.25",

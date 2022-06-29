@@ -4,14 +4,13 @@ services:
   mindingconfort:
     working_dir: /root
     build: ./docker
-    user: root
     volumes:
       - ./code:/root
     container_name: vue--comfortFront
     hostname: comfortFront
     ports:
       - 8090:3000
-    command: bash -c "npm run dev"
+    command: npm run dev
     tty: true
 # certbot:
 #   image: certbot/certbot
