@@ -2,7 +2,7 @@ version: "3"
 
 services:
   mindingconfort:
-    working_dir: /root
+    working_dir: /root/comfortFrontgit
     build: ./docker
     volumes:
       - ./code:/root/comfortFront
