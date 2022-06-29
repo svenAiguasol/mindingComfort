@@ -1,6 +1,6 @@
 FROM node:lts
 
-WORKDIR /root
+WORKDIR /root/comfortFront
 COPY ./package.json .
 RUN npm install vite --location=global
 EXPOSE 3000

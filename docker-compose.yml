@@ -5,7 +5,7 @@ services:
     working_dir: /root
     build: ./docker
     volumes:
-      - ./code:/root
+      - ./code:/root/comfortFront
     container_name: vue--comfortFront
     hostname: comfortFront
     ports:
