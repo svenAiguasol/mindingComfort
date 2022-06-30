@@ -4,15 +4,15 @@
 
 @font-face {
   font-family: "Ailerons";
-  src: url("src/assets/fonts/Ailerons-Typeface.otf");
+  src: url("@/assets/fonts/Ailerons-Typeface.otf");
 }
 @font-face {
   font-family: "CooperHewittBody";
-  src: url("src/assets/fonts/CooperHewitt-Book.otf");
+  src: url("@/assets/fonts/CooperHewitt-Book.otf");
 }
 @font-face {
   font-family: "CooperHewittTitle";
-  src: url("src/assets/fonts/CooperHewitt-BoldItalic.otf");
+  src: url("@/assets/fonts/CooperHewitt-BoldItalic.otf");
 }
 
 @layer base {

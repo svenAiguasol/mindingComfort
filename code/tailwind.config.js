@@ -9,21 +9,5 @@ module.exports = {
       },
     },
   },
-  build: {
-    rollupOptions: {
-      output: {
-        assetFileNames: (assetInfo) => {
-          let extType = assetInfo.name.split(".").at(1)
-          if (/png|jpeg|jpg|svg|gif|tiff|bmp|ico/i.test(extType)) {
-            extType = "img"
-          }
-          if (/otf/i.test(extType)) {
-            extType = "fonts"
-          }
-          return `${extType}/[name]-[hash][extname]`
-        },
-      },
-    },
-  },
   plugins: [],
 }

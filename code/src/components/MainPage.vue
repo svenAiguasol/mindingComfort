@@ -48,7 +48,7 @@
           >
             <img
               class="xl:w-[90px] w-[60px] z-10 relative inline-block"
-              :src="'src/assets/img/' + val.img"
+              :src="val.img"
               alt=""
             />
             <p
@@ -137,11 +137,7 @@
             v-for="(benefit, i) in benefits"
             :key="i"
           >
-            <img
-              class="rounded-t-lg"
-              v-bind:src="'src/assets/img/' + benefit.img"
-              alt=""
-            />
+            <img class="rounded-t-lg" :src="benefit.img" alt="" />
             <div class="w-full shadow-lg p-5 bg-white">
               <h1 class="text-gray-700 text-left text-xl mb-5">
                 {{ benefit.title }}
@@ -175,11 +171,7 @@
             <div
               class="bg-gradient-to-tr from-orange-500 to-pink-600 h-60 w-full rounded-t-lg flex items-center justify-center text-center p-10"
             >
-              <img
-                class="h-40"
-                v-bind:src="'src/assets/img/' + segment.icon"
-                alt=""
-              />
+              <img class="h-40" :src="segment.icon" alt="" />
             </div>
             <div class="p-10 w-full h-full text-justify">
               <h1
@@ -221,11 +213,7 @@
         >
           <div v-for="(sensor, i) in mediciones" :key="i">
             <div class="inline-block">
-              <img
-                class="md:h-20 h-20"
-                v-bind:src="'src/assets/img/' + sensor.icono"
-                alt=""
-              />
+              <img class="md:h-20 h-20" v-bind:src="sensor.icon" alt="" />
             </div>
             <div>
               <h1
@@ -358,7 +346,7 @@
               class="w-20"
               v-for="(btn, i) in instruccion.btns"
               :key="i"
-              v-bind:src="'img/' + btn.icon"
+              v-bind:src="btn.icon"
               alt=""
             />
           </div>
@@ -498,41 +486,56 @@ const props = defineProps(["mainData"])
 const comfortIcons = ref()
 comfortIcons.value = [
   {
-    img: "icono_frio.svg",
+    img: new URL("../assets/img/icono_frio.svg", import.meta.url).href,
     txt: "Frescos",
   },
-  { img: "icono_calor.svg", txt: "Abrigados" },
-  { img: "icono_humedad.svg", txt: "Sin excesos de humedad" },
-  { img: "icono_ruido.svg", txt: "Con buena acústica" },
-  { img: "icono_iluminacion.svg", txt: "Suficientemente iluminados" },
-  { img: "icono_co2.svg", txt: "Con niveles de CO2 aceptables" },
+  {
+    img: new URL("../assets/img/icono_calor.svg", import.meta.url).href,
+    txt: "Abrigados",
+  },
+  {
+    img: new URL("../assets/img/icono_humedad.svg", import.meta.url).href,
+    txt: "Sin excesos de humedad",
+  },
+  {
+    img: new URL("../assets/img/icono_ruido.svg", import.meta.url).href,
+    txt: "Con buena acústica",
+  },
+  {
+    img: new URL("../assets/img/icono_iluminacion.svg", import.meta.url).href,
+    txt: "Suficientemente iluminados",
+  },
+  {
+    img: new URL("../assets/img/icono_co2.svg", import.meta.url).href,
+    txt: "Con niveles de CO2 aceptables",
+  },
 ]
 const benefits = ref()
 benefits.value = [
   {
     title: "Monitorizar las condiciones",
-    img: "value_spec_1.png",
+    img: new URL("../assets/img/value_spec_1.png", import.meta.url).href,
     txt: "Con nuestra red de monitoreo, sabrás en cada momento las condiciones de cada aula, lo que te permitirá saber cuáles son.",
     btn: "ver tecnología",
     lnk: "#tecnologia",
   },
   {
     title: "Clasificar, analizar y recomendar",
-    img: "value_spec_2.png",
+    img: new URL("../assets/img/value_spec_2.png", import.meta.url).href,
     txt: "Gracias a los reportes sabrás cuáles son las aulas que requieren más atención, y qué problemas tiene cada aula. De esta es mucho más fácil encontrar soluciones específicas.",
     btn: "ver demo",
     lnk: "/demo",
   },
   {
     title: "Acompañarte en el proceso",
-    img: "value_spec_3.png",
+    img: new URL("../assets/img/value_spec_3.png", import.meta.url).href,
     txt: "Recibe recomendaciones tecnológicas específicas para cada aula de manera automática y solicita el acompañamiento contínuo para hacer tus proyectos realidad.",
     btn: "ver tarifas de servicio",
     lnk: "#tarifas",
   },
   {
     title: "Integrar a la comunidad",
-    img: "value_spec_4.png",
+    img: new URL("../assets/img/value_spec_4.png", import.meta.url).href,
     txt: "Con nuestro sistema de alertas, puedes involucrar a profesores y personal auxiliar para tomar acciones inmediatas ante eventualidades. Por ejemplo, '¡ventila la sala al salir al recreo porfavor!'.",
     btn: "ver tarifas de servicio",
     lnk: "#tarifas",
@@ -542,17 +545,17 @@ benefits.value = [
 const segments = ref()
 segments.value = [
   {
-    icon: "icono_maleta.svg",
+    icon: new URL("../assets/img/icono_maleta.svg", import.meta.url).href,
     title: "Administrador/a de colegio o jardín privado",
     txt: "Te ponemos en contacto con proveedores y te acompañamos en el desarrollo de tu proyecto de mejora",
   },
   {
-    icon: "icono_escudo.svg",
+    icon: new URL("../assets/img/icono_escudo.svg", import.meta.url).href,
     title: "Administrador/a de colegio o jardín público",
     txt: "Te ayudamos a presentar tu proyecto al programa público de mejoramiento de infraestructura escolar, directamente con la ASE",
   },
   {
-    icon: "icono_padre.svg",
+    icon: new URL("../assets/img/icono_padre.svg", import.meta.url).href,
     title: "Parte de una comunidad de apoderados",
     txt: "Te ayudamos a impulsar las iniciativas de apoderados que estén relacionadas con el mejoramiento de las aulas. ",
   },
@@ -560,10 +563,23 @@ segments.value = [
 
 const mediciones = ref()
 mediciones.value = [
-  { icono: "icono_sensor_calor.svg", txt: "Temperatura" },
-  { icono: "icono_sensor_ruido.svg", txt: "Ruido" },
-  { icono: "icono_sensor_co2.svg", txt: "Dióxido de carbono" },
-  { icono: "icono_sensor_humedad.svg", txt: "Humedad" },
+  {
+    icon: new URL("../assets/img/icono_sensor_calor.svg", import.meta.url).href,
+    txt: "Temperatura",
+  },
+  {
+    icon: new URL("../assets/img/icono_sensor_ruido.svg", import.meta.url).href,
+    txt: "Ruido",
+  },
+  {
+    icon: new URL("../assets/img/icono_sensor_co2.svg", import.meta.url).href,
+    txt: "Dióxido de carbono",
+  },
+  {
+    icon: new URL("../assets/img/icono_sensor_humedad.svg", import.meta.url)
+      .href,
+    txt: "Humedad",
+  },
 ]
 
 const tarifas = ref()
@@ -602,21 +618,34 @@ instrucciones.value = [
     title: "Declara tu interés",
     txt: "Llámanos, escríbenos, llena el formularo, ven a vernos, cómo gustes.",
     btns: [
-      { icon: "icono_telefono.svg", lnk: "" },
-      { icon: "icono_mail.svg", lnk: "" },
-      { icon: "icono_formulario.svg", lnk: "" },
-      { icon: "icono_mapa.svg", lnk: "" },
+      {
+        icon: new URL("../assets/img/icono_telefono.svg", import.meta.url).href,
+        lnk: "",
+      },
+      {
+        icon: new URL("../assets/img/icono_mail.svg", import.meta.url).href,
+        lnk: "",
+      },
+      {
+        icon: new URL("../assets/img/icono_formulario.svg", import.meta.url)
+          .href,
+        lnk: "",
+      },
+      {
+        icon: new URL("../assets/img/icono_mapa.svg", import.meta.url).href,
+        lnk: "",
+      },
     ],
   },
   {
     title: "Vamos a terreno",
     txt: "Uno de nuestros instaladores acudirá al establecimiento, levantará los datos de cada aula y posteriormente instalará la red de monitorización.",
-    btns: [{ icon: "", lnk: "" }],
+    btns: [{ icon: new URL("../assets/img/", import.meta.url).href, lnk: "" }],
   },
   {
     title: "Recibe los beneficios",
     txt: "Te capacitamos a ti y a tu equipo a usar las herramientas y cuidar la red de monitorización.",
-    btns: [{ icon: "", lnk: "" }],
+    btns: [{ icon: new URL("../assets/img/", import.meta.url).href, lnk: "" }],
   },
 ]
 </script>

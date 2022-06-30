@@ -2,7 +2,7 @@
   "name": "sven",
   "version": "0.0.0",
   "scripts": {
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vue-tsc --noEmit && vite build ",
     "dev": "vite --host",
     "preview": "vite preview --port 5050",
     "typecheck": "vue-tsc --noEmit"
