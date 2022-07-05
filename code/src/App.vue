@@ -1,11 +1,11 @@
 <template>
   <div ref="root">
     <div class="w-full absolute top-0 z-10">
-      <MainNav v-if="mainData" ref="mainNav" :mainData="mainData" />
+      <MainNav ref="mainNav" />
     </div>
     <div class="flex">
       <div class="flex-column w-full">
-        <router-view v-if="mainData" :mainData="mainData" />
+        <router-view />
       </div>
     </div>
   </div>
@@ -23,7 +23,7 @@ const getMain = async () => {
     console.log(err)
   }
 }
-getMain()
+//getMain()
 
 onMounted(() => {
   const thisInstance = getCurrentInstance()

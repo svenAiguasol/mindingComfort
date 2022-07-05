@@ -3,7 +3,7 @@
     <!-- top Banner ################################## -->
     <div id="home" class="top-banner relative w-full h-100">
       <div
-        class="w-full h-screen bg-[url('@/assets/img/fondo_top.jpg')] md:bg-cover bg-[length:1200px] bg-center bg-no-repeat"
+        class="w-full h-screen bg-[url('@/assets/img/fondo_top_2.jpg')] md:bg-cover bg-[length:1200px] bg-center bg-no-repeat"
         alt=""
       >
         <div class="w-full h-screen bg-black/[0.4]"></div>
@@ -11,9 +11,9 @@
           class="absolute leading-snug text-white left-1/2 text-4xl xl:top-3/4 md:top-1/2 top-1/2 z-10 text-center md:w-2/3 w-full transform -translate-x-1/2 mix-blend-screen"
         >
           Sabemos de tu compromiso con su educación <br />
-          y queremos <br class="md:hidden block" />
-          <span class="bg-white pl-3 pr-3 ml-3 rounded-md text-black"
-            >ayudarte a cumplirlo</span
+          y <br class="md:hidden block" />
+          <span class="bg-white px-3 ml-3 rounded-md text-black"
+            >te ayudamos a cumplirlo</span
           >
         </h1>
       </div>
@@ -26,7 +26,7 @@
         <h1
           class="text-gray-700 leading-snug mt-20 text-4xl text-center w-full"
         >
-          Y para cumplirlo, tus niños necesitan y se merecen
+          Y para cumplirlo, tus hij@s necesitan y se merecen
           <span
             class="bg-gradient-to-r from-sky-600 to-blue-600 pl-3 pr-3 ml-3 rounded-md text-white"
             >espacios confortables</span
@@ -52,7 +52,7 @@
               alt=""
             />
             <p
-              class="relative z-10 xl:mt-10 mt-3 text-center xl:text-gray-700 text-white xl:text-xl text-sm"
+              class="relative z-10 xl:mt-10 mt-3 text-center xl:text-gray-700 text-white xl:text-2xl text-md"
             >
               {{ val.txt }}
             </p>
@@ -71,49 +71,22 @@
       <div class="md:w-1/2 w-full mt-20">
         <div class="md:flex justify-center gap-40">
           <div
-            class="bg-gradient-to-tr shadow-lg from-lime-500 to-green-700 md:w-60 w-full md:h-96 md:rounded-xl text-center p-12"
+            v-for="(cifra, i) in cifras"
+            :key="i"
+            :class="
+              'bg-gradient-to-tr shadow-lg from-' +
+              cifra.color1 +
+              ' to-' +
+              cifra.color2 +
+              ' md:w-60 w-full md:rounded-xl text-center p-12'
+            "
           >
-            <img
-              class="w-28 inline-block mt-10"
-              src="@/assets/img/icono_enfermedad.svg"
-              alt=""
-            />
+            <img class="w-40 inline-block mt-10" :src="cifra.icon" alt="" />
             <br />
-            <h2 class="text-white leading-[25px] mt-10 text-xl">
-              Hasta <br />
-              <b class="text-4xl">50%</b> <br />
-              menos de enfermedades
-            </h2>
-          </div>
-          <div
-            class="bg-gradient-to-tr shadow-lg from-fuchsia-700 to-violet-700 md:w-60 w-full md:h-96 md:rounded-xl text-center p-12"
-          >
-            <img
-              class="w-28 inline-block mt-10"
-              src="@/assets/img/icono_rendimiento.svg"
-              alt=""
-            />
-            <br />
-            <h2 class="text-white leading-[25px] mt-10 text-xl">
-              Hasta <br />
-              <b class="text-4xl">15%</b> <br />
-              más de rendimiento
-            </h2>
-          </div>
-
-          <div
-            class="bg-gradient-to-tr shadow-lg from-orange-600 to-rose-600 md:w-60 w-full md:h-96 md:rounded-xl text-center p-12"
-          >
-            <img
-              class="w-28 inline-block mt-10"
-              src="@/assets/img/icono_comunidad.svg"
-              alt=""
-            />
-            <br />
-            <h2 class="text-white leading-[25px] mt-10 text-xl">
-              Garantizado,
-              <b class="text-4xl">100%</b> <br />
-              comunidad más feliz
+            <h2 class="text-white leading-[25px] mt-10 text-2xl">
+              {{ cifra.txt1 }} <br />
+              <b class="text-4xl">{{ cifra.num }}</b> <br />
+              {{ cifra.txt2 }}
             </h2>
           </div>
         </div>
@@ -138,14 +111,14 @@
             :key="i"
           >
             <img class="rounded-t-lg" :src="benefit.img" alt="" />
-            <div class="w-full shadow-lg p-5 bg-white">
+            <div class="w-full shadow-lg p-5 xl:h-60 bg-white">
               <h1 class="text-gray-700 text-left text-xl mb-5">
                 {{ benefit.title }}
               </h1>
-              <p class="text-justify">{{ benefit.txt }}</p>
+              <p class="text-justify text-xl">{{ benefit.txt }}</p>
               <a
                 v-bind:href="benefit.lnk"
-                class="rounded-full mt-5 p-1 text-lg inline-block bg-gradient-to-r from-sky-500 to-blue-600 text-white xl:w-1/2 px-10 md:w-3/4"
+                class="rounded-full mt-5 p-1 text-xl inline-block bg-gradient-to-r from-sky-500 to-blue-600 text-white xl:w-1/2 px-10 md:w-3/4"
                 >{{ benefit.btn }}</a
               >
             </div>
@@ -179,7 +152,7 @@
               >
                 {{ segment.title }}
               </h1>
-              <p class="mt-5">
+              <p class="mt-5 text-xl">
                 {{ segment.txt }}
               </p>
             </div>
@@ -203,10 +176,10 @@
 
       <div class="w-full md:mt-20 mt-10 text-center">
         <h1 class="text-sky-500 leading-snug text-4xl text-center w-full">
-          Estación comfort
+          Estación Comfort
         </h1>
         <h2 class="text-blue-800 text-3xl mt-5 mb-10">
-          Medición c/5 minutos de
+          Medición cada 5 minutos de
         </h2>
         <div
           class="grid md:px-40 xl:grid-cols-4 grid-cols-2 md:gap-5 gap-y-20 items-center mt-5"
@@ -235,7 +208,7 @@
           </div>
           <div>
             <h2 class="text-blue-800 text-3xl md:mt-5 md:mb-5 w-full">
-              Tamaño del dispositivo
+              Tamaño de la estación
             </h2>
             <h2 class="text-sky-500 text-3xl mt-2 w-full">20 x 20 x 5 cm</h2>
           </div>
@@ -248,7 +221,7 @@
         id="tarifas"
         class="text-gray-700 leading-snug md:mt-20 mt-10 text-4xl text-center w-full"
       >
-        Tarifas de servicio
+        Detalles del servicio y tarifas
       </h1>
     </div>
 
@@ -269,8 +242,8 @@
             </h1>
           </div>
           <div class="text-left p-5 px-10">
-            <h2 class="mb-2">Incluye:</h2>
-            <ul class="list-disc ml-5 mb-5">
+            <h2 class="mb-2 text-xl">Incluye:</h2>
+            <ul class="list-disc ml-5 mb-5 text-xl">
               <li v-for="(incl, j) in tarifa.includes" :key="j">{{ incl }}</li>
             </ul>
             <h2 class="text-right text-2xl">{{ tarifa.price }}</h2>
@@ -291,7 +264,7 @@
       class="w-full mt-5 bg-gradient-to-tr from-sky-500 to-blue-600 text-white text-left p-5 flex place-items-center items-center justify-items-center justify-center"
     >
       <div class="md:w-1/3 w-full pt-5">
-        <ul class="list-disc ml-5 mb-5">
+        <ul class="list-disc ml-5 mb-5 text-xl">
           <li>Mínimo de 10 salas/espacios por establecimiento</li>
           <li>
             Tarifa por sala sujeta a localización del establecimiento y
@@ -306,13 +279,13 @@
         id="cotiza"
         class="text-gray-700 leading-snug md:mt-20 mt-10 text-4xl text-center w-full"
       >
-        Contrata Minding Comfort
+        Contrata Comfort
       </h1>
     </div>
 
     <div class="w-full mt-10 xl:px-60 flex justify-center flex-wrap">
       <div
-        class="w-2/3 grid grid-cols-6 self-center gap-y-5 place-self-center place-items-center md:place-items-left mt-10"
+        class="w-2/3 grid grid-cols-6 self-center gap-y-5 place-self-center xl:place-items-start md:place-items-left place-items-center mt-10"
         v-for="(instruccion, i) in instrucciones"
         :key="i"
       >
@@ -335,8 +308,8 @@
             {{ instruccion.title }}
           </h1>
           <br />
-          <p>
-            Llámanos, escríbenos, llena el formularo, ven a vernos, cómo gustes
+          <p class="text-xl">
+            {{ instruccion.txt }}
           </p>
           <div
             class="flex gap-4 mt-5 justify-center md:justify-start"
@@ -358,9 +331,9 @@
       <h1
         class="text-gray-700 leading-snug md:mt-10 mt-10 text-2xl text-center w-full"
       >
-        Formulario de solicitud de servicio
+        Formulario de solicitud de contacto
       </h1>
-      <p class="text-center w-full">
+      <p class="text-center w-full text-xl">
         Llena y envía el formulario y te contactaremos en menos de 48 horas
       </p>
     </div>
@@ -371,44 +344,71 @@
       <div class="md:w-1/3 flex justify-center">
         <div class="w-full grid grid-cols-2 gap-x-10">
           <div class="col-span-2 mt-5">
-            <p class="w-full text-center">Nombre persona de contacto</p>
+            <p class="w-full text-center text-xl">Nombre persona de contacto</p>
             <input
-              class="w-full rounded-md mt-5 h-10 text-black p-5"
+              class="w-full rounded-md mt-5 h-10 text-black px-5"
               type="text"
+              v-model="formulario.nombre"
             />
-            <p class="w-full text-center mt-5">Nombre de establecimiento</p>
+            <p class="w-full text-center mt-5 text-xl">
+              Nombre de establecimiento
+            </p>
             <input
-              class="w-full rounded-md mt-5 h-10 text-black p-5"
+              class="w-full rounded-md mt-5 h-10 text-black px-5"
               type="text"
-            />
-          </div>
-          <div class="col-span-1 mt-5">
-            <p class="w-full text-center">Región</p>
-            <input
-              class="w-full rounded-md mt-5 h-10 text-black p-5"
-              type="text"
-            />
-            <p class="w-full text-center mt-5">Comuna</p>
-            <input
-              class="w-full rounded-md mt-5 h-10 text-black p-5"
-              type="text"
+              v-model="formulario.establecimiento"
             />
           </div>
-          <div class="col-span-1 mt-5">
-            <p class="w-full text-center">Teléfono</p>
-            <input
-              class="w-full rounded-md mt-5 h-10 text-black p-5"
+          <div class="md:col-span-1 col-span-2 mt-5">
+            <p class="w-full text-center text-xl">Región</p>
+            <select
+              v-model="formulario.region"
+              v-on:change="getComunas()"
+              class="w-full rounded-md mt-5 h-10 text-black px-5"
               type="text"
+              placeholder="Selecciona una región"
+            >
+              <option
+                v-for="(region, i) in regiones"
+                :key="i"
+                :value="region.region"
+              >
+                {{ region.region }}
+              </option>
+            </select>
+            <p class="w-full text-center mt-5 text-xl">Comuna</p>
+
+            <select
+              v-model="formulario.comuna"
+              value=""
+              class="w-full rounded-md mt-5 h-10 text-black px-5"
+              type="text"
+            >
+              <option v-for="(comuna, i) in comunas" :key="i" :value="comuna">
+                {{ comuna }}
+              </option>
+            </select>
+          </div>
+          <div class="md:col-span-1 col-span-2 mt-5">
+            <p class="w-full text-center text-xl">Teléfono</p>
+            <input
+              class="w-full rounded-md mt-5 h-10 text-black px-5"
+              type="text"
+              placeholder="+56123456789"
+              v-model="formulario.fono"
             />
-            <p class="w-full text-center mt-5">Correo electrónico</p>
+            <p class="w-full text-center mt-5 text-xl">Correo electrónico</p>
             <input
-              class="w-full rounded-md mt-5 h-10 text-black p-5"
+              class="w-full rounded-md mt-5 h-10 text-black px-5"
               type="text"
+              placeholder="persona@dominio.cl"
+              v-model="formulario.mail"
             />
           </div>
           <div class="col-span-2 mt-10 text-center flex justify-center">
             <a
-              class="border-white border-2 w-80 block text-center rounded-full p-2"
+              v-on:click="sendMail()"
+              class="border-white border-2 w-80 block text-center rounded-full p-2 cursor-pointer hover:bg-white hover:text-sky-600 text-xl"
               >Enviar solicitud</a
             >
           </div>
@@ -481,8 +481,9 @@
   </div>
 </template>
 <script setup>
+import axios from "axios"
 import { ref, onMounted, getCurrentInstance } from "vue"
-const props = defineProps(["mainData"])
+//const props = defineProps(["mainData"])
 const comfortIcons = ref()
 comfortIcons.value = [
   {
@@ -503,7 +504,7 @@ comfortIcons.value = [
   },
   {
     img: new URL("../assets/img/icono_iluminacion.svg", import.meta.url).href,
-    txt: "Suficientemente iluminados",
+    txt: "Bien iluminados",
   },
   {
     img: new URL("../assets/img/icono_co2.svg", import.meta.url).href,
@@ -513,16 +514,16 @@ comfortIcons.value = [
 const benefits = ref()
 benefits.value = [
   {
-    title: "Monitorizar las condiciones",
+    title: "Monitorear las condiciones",
     img: new URL("../assets/img/value_spec_1.png", import.meta.url).href,
-    txt: "Con nuestra red de monitoreo, sabrás en cada momento las condiciones de cada aula, lo que te permitirá saber cuáles son.",
+    txt: "Con nuestra red de monitoreo, sabes en cada momento las condiciones de cada aula, lo que te permite focalizar esfuerzos y reaccionar de manera ágil.",
     btn: "ver tecnología",
     lnk: "#tecnologia",
   },
   {
     title: "Clasificar, analizar y recomendar",
     img: new URL("../assets/img/value_spec_2.png", import.meta.url).href,
-    txt: "Gracias a los reportes sabrás cuáles son las aulas que requieren más atención, y qué problemas tiene cada aula. De esta es mucho más fácil encontrar soluciones específicas.",
+    txt: "Gracias a los reportes sabes cuáles son las aulas que requieren más atención, y qué problemas tiene cada aula. De esta es mucho más fácil encontrar soluciones específicas.",
     btn: "ver demo",
     lnk: "/demo",
   },
@@ -530,14 +531,14 @@ benefits.value = [
     title: "Acompañarte en el proceso",
     img: new URL("../assets/img/value_spec_3.png", import.meta.url).href,
     txt: "Recibe recomendaciones tecnológicas específicas para cada aula de manera automática y solicita el acompañamiento contínuo para hacer tus proyectos realidad.",
-    btn: "ver tarifas de servicio",
+    btn: "Ver detalles del servicio y tarifas",
     lnk: "#tarifas",
   },
   {
     title: "Integrar a la comunidad",
     img: new URL("../assets/img/value_spec_4.png", import.meta.url).href,
     txt: "Con nuestro sistema de alertas, puedes involucrar a profesores y personal auxiliar para tomar acciones inmediatas ante eventualidades. Por ejemplo, '¡ventila la sala al salir al recreo porfavor!'.",
-    btn: "ver tarifas de servicio",
+    btn: "Ver detalles del servicio y tarifas",
     lnk: "#tarifas",
   },
 ]
@@ -552,7 +553,7 @@ segments.value = [
   {
     icon: new URL("../assets/img/icono_escudo.svg", import.meta.url).href,
     title: "Administrador/a de colegio o jardín público",
-    txt: "Te ayudamos a presentar tu proyecto al programa público de mejoramiento de infraestructura escolar, directamente con la ASE",
+    txt: "Te ayudamos a presentar tu proyecto al programa público de mejoramiento de infraestructura escolar, directamente con la Agencia de Sostenibilidad Energética",
   },
   {
     icon: new URL("../assets/img/icono_padre.svg", import.meta.url).href,
@@ -609,14 +610,14 @@ tarifas.value = [
       "Desarrollo de la ingeniería del proyecto",
       "Apoyo en la gestión del desarrollo del proyecto",
     ],
-    price: "A convenir / mes",
+    price: "A convenir",
   },
 ]
 const instrucciones = ref()
 instrucciones.value = [
   {
     title: "Declara tu interés",
-    txt: "Llámanos, escríbenos, llena el formularo, ven a vernos, cómo gustes.",
+    txt: "Llámanos, escríbenos y agenda una visita a tu establecimiento educacional.",
     btns: [
       {
         icon: new URL("../assets/img/icono_telefono.svg", import.meta.url).href,
@@ -646,6 +647,485 @@ instrucciones.value = [
     title: "Recibe los beneficios",
     txt: "Te capacitamos a ti y a tu equipo a usar las herramientas y cuidar la red de monitorización.",
     btns: [{ icon: new URL("../assets/img/", import.meta.url).href, lnk: "" }],
+  },
+]
+
+const comunas = ref()
+comunas.value = []
+function getComunas() {
+  console.log(formulario.value.region)
+  const coms = regiones.value.filter(
+    (region) => region.region === formulario.value.region
+  )[0].comunas
+  console.log(coms)
+  comunas.value = coms
+}
+
+const sentMail = ref()
+sentMail.value = false
+function sendMail() {
+  axios.post("/sendMail", formulario.value).then((res) => {
+    if (res.status === 200) {
+      sentMail.value = true
+    }
+  })
+}
+
+const cifras = ref()
+cifras.value = [
+  {
+    txt1: "Hasta",
+    num: "50%",
+    txt2: "menos de enfermedades",
+    color1: "lime-500",
+    color2: "green-700",
+    icon: new URL("../assets/img/icono_enfermedad.svg", import.meta.url).href,
+  },
+  {
+    txt1: "Hasta",
+    num: "15%",
+    txt2: "más de rendimiento",
+    color1: "fuchsia-700",
+    color2: "violet-700",
+    icon: new URL("../assets/img/icono_rendimiento.svg", import.meta.url).href,
+  },
+  {
+    txt1: "Garantizado",
+    num: "100%",
+    txt2: "comunidad más feliz",
+    color1: "orange-600",
+    color2: "rose-600",
+    icon: new URL("../assets/img/icono_comunidad.svg", import.meta.url).href,
+  },
+]
+
+const formulario = ref()
+formulario.value = {
+  region: { region: "", comunas: [] },
+  comuna: "",
+}
+const regiones = ref()
+regiones.value = [
+  {
+    region: "Arica y Parinacota",
+    comunas: ["Arica", "Camarones", "Putre", "General Lagos"],
+  },
+  {
+    region: "Tarapacá",
+    comunas: [
+      "Iquique",
+      "Alto Hospicio",
+      "Pozo Almonte",
+      "Camiña",
+      "Colchane",
+      "Huara",
+      "Pica",
+    ],
+  },
+  {
+    region: "Antofagasta",
+    comunas: [
+      "Antofagasta",
+      "Mejillones",
+      "Sierra Gorda",
+      "Taltal",
+      "Calama",
+      "Ollagüe",
+      "San Pedro de Atacama",
+      "Tocopilla",
+      "María Elena",
+    ],
+  },
+  {
+    region: "Atacama",
+    comunas: [
+      "Copiapó",
+      "Caldera",
+      "Tierra Amarilla",
+      "Chañaral",
+      "Diego de Almagro",
+      "Vallenar",
+      "Alto del Carmen",
+      "Freirina",
+      "Huasco",
+    ],
+  },
+  {
+    region: "Coquimbo",
+    comunas: [
+      "La Serena",
+      "Coquimbo",
+      "Andacollo",
+      "La Higuera",
+      "Paiguano",
+      "Vicuña",
+      "Illapel",
+      "Canela",
+      "Los Vilos",
+      "Salamanca",
+      "Ovalle",
+      "Combarbalá",
+      "Monte Patria",
+      "Punitaqui",
+      "Río Hurtado",
+    ],
+  },
+  {
+    region: "Valparaíso",
+    comunas: [
+      "Valparaíso",
+      "Casablanca",
+      "Concón",
+      "Juan Fernández",
+      "Puchuncaví",
+      "Quintero",
+      "Viña del Mar",
+      "Isla de Pascua",
+      "Los Andes",
+      "Calle Larga",
+      "Rinconada",
+      "San Esteban",
+      "La Ligua",
+      "Cabildo",
+      "Papudo",
+      "Petorca",
+      "Zapallar",
+      "Quillota",
+      "Calera",
+      "Hijuelas",
+      "La Cruz",
+      "Nogales",
+      "San Antonio",
+      "Algarrobo",
+      "Cartagena",
+      "El Quisco",
+      "El Tabo",
+      "Santo Domingo",
+      "San Felipe",
+      "Catemu",
+      "Llaillay",
+      "Panquehue",
+      "Putaendo",
+      "Santa María",
+      "Quilpué",
+      "Limache",
+      "Olmué",
+      "Villa Alemana",
+    ],
+  },
+  {
+    region: "Región del Libertador Gral. Bernardo O’Higgins",
+    comunas: [
+      "Rancagua",
+      "Codegua",
+      "Coinco",
+      "Coltauco",
+      "Doñihue",
+      "Graneros",
+      "Las Cabras",
+      "Machalí",
+      "Malloa",
+      "Mostazal",
+      "Olivar",
+      "Peumo",
+      "Pichidegua",
+      "Quinta de Tilcoco",
+      "Rengo",
+      "Requínoa",
+      "San Vicente",
+      "Pichilemu",
+      "La Estrella",
+      "Litueche",
+      "Marchihue",
+      "Navidad",
+      "Paredones",
+      "San Fernando",
+      "Chépica",
+      "Chimbarongo",
+      "Lolol",
+      "Nancagua",
+      "Palmilla",
+      "Peralillo",
+      "Placilla",
+      "Pumanque",
+      "Santa Cruz",
+    ],
+  },
+  {
+    region: "Región del Maule",
+    comunas: [
+      "Talca",
+      "Constitución",
+      "Curepto",
+      "Empedrado",
+      "Maule",
+      "Pelarco",
+      "Pencahue",
+      "Río Claro",
+      "San Clemente",
+      "San Rafael",
+      "Cauquenes",
+      "Chanco",
+      "Pelluhue",
+      "Curicó",
+      "Hualañé",
+      "Licantén",
+      "Molina",
+      "Rauco",
+      "Romeral",
+      "Sagrada Familia",
+      "Teno",
+      "Vichuquén",
+      "Linares",
+      "Colbún",
+      "Longaví",
+      "Parral",
+      "Retiro",
+      "San Javier",
+      "Villa Alegre",
+      "Yerbas Buenas",
+    ],
+  },
+  {
+    region: "Región de Ñuble",
+    comunas: [
+      "Cobquecura",
+      "Coelemu",
+      "Ninhue",
+      "Portezuelo",
+      "Quirihue",
+      "Ránquil",
+      "Treguaco",
+      "Bulnes",
+      "Chillán Viejo",
+      "Chillán",
+      "El Carmen",
+      "Pemuco",
+      "Pinto",
+      "Quillón",
+      "San Ignacio",
+      "Yungay",
+      "Coihueco",
+      "Ñiquén",
+      "San Carlos",
+      "San Fabián",
+      "San Nicolás",
+    ],
+  },
+  {
+    region: "Región del Biobío",
+    comunas: [
+      "Concepción",
+      "Coronel",
+      "Chiguayante",
+      "Florida",
+      "Hualqui",
+      "Lota",
+      "Penco",
+      "San Pedro de la Paz",
+      "Santa Juana",
+      "Talcahuano",
+      "Tomé",
+      "Hualpén",
+      "Lebu",
+      "Arauco",
+      "Cañete",
+      "Contulmo",
+      "Curanilahue",
+      "Los Álamos",
+      "Tirúa",
+      "Los Ángeles",
+      "Antuco",
+      "Cabrero",
+      "Laja",
+      "Mulchén",
+      "Nacimiento",
+      "Negrete",
+      "Quilaco",
+      "Quilleco",
+      "San Rosendo",
+      "Santa Bárbara",
+      "Tucapel",
+      "Yumbel",
+      "Alto Biobío",
+    ],
+  },
+  {
+    region: "Región de la Araucanía",
+    comunas: [
+      "Temuco",
+      "Carahue",
+      "Cunco",
+      "Curarrehue",
+      "Freire",
+      "Galvarino",
+      "Gorbea",
+      "Lautaro",
+      "Loncoche",
+      "Melipeuco",
+      "Nueva Imperial",
+      "Padre las Casas",
+      "Perquenco",
+      "Pitrufquén",
+      "Pucón",
+      "Saavedra",
+      "Teodoro Schmidt",
+      "Toltén",
+      "Vilcún",
+      "Villarrica",
+      "Cholchol",
+      "Angol",
+      "Collipulli",
+      "Curacautín",
+      "Ercilla",
+      "Lonquimay",
+      "Los Sauces",
+      "Lumaco",
+      "Purén",
+      "Renaico",
+      "Traiguén",
+      "Victoria",
+    ],
+  },
+  {
+    region: "Región de Los Ríos",
+    comunas: [
+      "Valdivia",
+      "Corral",
+      "Lanco",
+      "Los Lagos",
+      "Máfil",
+      "Mariquina",
+      "Paillaco",
+      "Panguipulli",
+      "La Unión",
+      "Futrono",
+      "Lago Ranco",
+      "Río Bueno",
+    ],
+  },
+  {
+    region: "Región de Los Lagos",
+    comunas: [
+      "Puerto Montt",
+      "Calbuco",
+      "Cochamó",
+      "Fresia",
+      "Frutillar",
+      "Los Muermos",
+      "Llanquihue",
+      "Maullín",
+      "Puerto Varas",
+      "Castro",
+      "Ancud",
+      "Chonchi",
+      "Curaco de Vélez",
+      "Dalcahue",
+      "Puqueldón",
+      "Queilén",
+      "Quellón",
+      "Quemchi",
+      "Quinchao",
+      "Osorno",
+      "Puerto Octay",
+      "Purranque",
+      "Puyehue",
+      "Río Negro",
+      "San Juan de la Costa",
+      "San Pablo",
+      "Chaitén",
+      "Futaleufú",
+      "Hualaihué",
+      "Palena",
+    ],
+  },
+  {
+    region: "Región Aisén del Gral. Carlos Ibáñez del Campo",
+    comunas: [
+      "Coihaique",
+      "Lago Verde",
+      "Aisén",
+      "Cisnes",
+      "Guaitecas",
+      "Cochrane",
+      "O’Higgins",
+      "Tortel",
+      "Chile Chico",
+      "Río Ibáñez",
+    ],
+  },
+  {
+    region: "Región de Magallanes y de la Antártica Chilena",
+    comunas: [
+      "Punta Arenas",
+      "Laguna Blanca",
+      "Río Verde",
+      "San Gregorio",
+      "Cabo de Hornos (Ex Navarino)",
+      "Antártica",
+      "Porvenir",
+      "Primavera",
+      "Timaukel",
+      "Natales",
+      "Torres del Paine",
+    ],
+  },
+  {
+    region: "Región Metropolitana de Santiago",
+    comunas: [
+      "Cerrillos",
+      "Cerro Navia",
+      "Conchalí",
+      "El Bosque",
+      "Estación Central",
+      "Huechuraba",
+      "Independencia",
+      "La Cisterna",
+      "La Florida",
+      "La Granja",
+      "La Pintana",
+      "La Reina",
+      "Las Condes",
+      "Lo Barnechea",
+      "Lo Espejo",
+      "Lo Prado",
+      "Macul",
+      "Maipú",
+      "Ñuñoa",
+      "Pedro Aguirre Cerda",
+      "Peñalolén",
+      "Providencia",
+      "Pudahuel",
+      "Quilicura",
+      "Quinta Normal",
+      "Recoleta",
+      "Renca",
+      "Santiago",
+      "San Joaquín",
+      "San Miguel",
+      "San Ramón",
+      "Vitacura",
+      "Puente Alto",
+      "Pirque",
+      "San José de Maipo",
+      "Colina",
+      "Lampa",
+      "Tiltil",
+      "San Bernardo",
+      "Buin",
+      "Calera de Tango",
+      "Paine",
+      "Melipilla",
+      "Alhué",
+      "Curacaví",
+      "María Pinto",
+      "San Pedro",
+      "Talagante",
+      "El Monte",
+      "Isla de Maipo",
+      "Padre Hurtado",
+      "Peñaflor",
+    ],
   },
 ]
 </script>
