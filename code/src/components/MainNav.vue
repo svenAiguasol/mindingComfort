@@ -79,11 +79,11 @@
           </li>
           <li>
             <div
-              class="border-white rounded-full border-2 ml-14 pr-2 pl-2 md:hover:bg-white"
+              class="border-white rounded-full border-2 ml-14 px-4 md:hover:bg-white"
             >
               <a
                 href="#"
-                class="block text-xl py-2 pr-4 pl-3 text-white hover:bg-white md:hover:bg-white md:border-0 md:hover:text-black md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                class="block text-xl py-2 pr-4 text-white hover:bg-white md:hover:bg-white md:border-0 md:hover:text-black md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                 >Ingresa | Demo</a
               >
             </div>

@@ -1,5 +1,102 @@
 <template>
   <div class="relative" ref="root">
+    <div class="w-full absolute top-0 z-10">
+      <nav class="w-full bg-black/[.6] h-18 py-5 sm:px-4 z-10">
+        <div
+          class="container flex flex-wrap justify-between items-center mx-auto"
+        >
+          <a href="#home" class="flex items-center">
+            <img
+              src="@/assets/logo.svg"
+              class="mx-3 h-9 md:h-9"
+              alt="Minding Confort Logo"
+            />
+            <span
+              class="self-center text-4xl font-ailerons font-semibold whitespace-nowrap text-white dark:text-white"
+              ><h3 class="logo hidden md:block">confort</h3></span
+            >
+          </a>
+          <button
+            data-collapse-toggle="mobile-menu"
+            type="button"
+            class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            aria-controls="mobile-menu"
+            aria-expanded="false"
+          ></button>
+          <div class="flex items-center md:order-2">
+            <button
+              data-collapse-toggle="mobile-menu-2"
+              type="button"
+              class="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg xl:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+              aria-controls="mobile-menu-2"
+              aria-expanded="false"
+            >
+              <!-- <span class="sr-only">Open main menu</span> -->
+              <svg
+                class="hidden w-6 h-6"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+            </button>
+          </div>
+          <div
+            class="hidden justify-between items-center w-full xl:flex md:w-auto md:order-1"
+          >
+            <ul
+              class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium"
+            >
+              <li class="menu-item">
+                <a
+                  href="#como-funciona"
+                  class="block text-xl py-2 pr-4 pl-3 text-white rounded md:hover:text-sky-500 md:bg-transparent md:p-0 dark:text-white"
+                  aria-current="page"
+                  >Cómo funciona</a
+                >
+              </li>
+              <li class="menu-item">
+                <a
+                  href="#tecnologia"
+                  class="block text-xl py-2 pr-4 pl-3 ml-10 text-white hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-sky-500 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                  >Tecnología</a
+                >
+              </li>
+              <li class="menu-item">
+                <a
+                  href="#tarifas"
+                  class="block text-xl py-2 pr-4 pl-3 ml-10 text-white hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-sky-500 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                  >Tarifas</a
+                >
+              </li>
+              <li class="menu-item">
+                <a
+                  href="#cotiza"
+                  class="block text-xl py-2 pr-4 pl-3 ml-10 text-white hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-sky-500 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                  >Cotiza</a
+                >
+              </li>
+              <li>
+                <div
+                  class="border-white rounded-full border-2 ml-14 px-4 md:hover:bg-white"
+                >
+                  <a
+                    href="/login"
+                    class="block text-xl py-2 pr-4 text-white hover:bg-white md:hover:bg-white md:border-0 md:hover:text-black md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                    >Ingresa | Demo</a
+                  >
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
     <!-- top Banner ################################## -->
     <div id="home" class="top-banner relative w-full h-100">
       <div
@@ -28,7 +125,7 @@
         >
           Y para cumplirlo, tus hij@s necesitan y se merecen
           <span
-            class="bg-gradient-to-r from-sky-600 to-blue-600 pl-3 pr-3 ml-3 rounded-md text-white"
+            class="bg-gradient-to-r from-sky-600 to-blue-600 px-5 ml-3 rounded-md text-white"
             >espacios confortables</span
           >
         </h1>
@@ -73,13 +170,8 @@
           <div
             v-for="(cifra, i) in cifras"
             :key="i"
-            :class="
-              'bg-gradient-to-tr shadow-lg from-' +
-              cifra.color1 +
-              ' to-' +
-              cifra.color2 +
-              ' md:w-60 w-full md:rounded-xl text-center p-12'
-            "
+            class="shadow-lg bg-gradient-to-tr md:w-60 w-full md:rounded-xl text-center p-12"
+            :class="'from-' + cifra.color1 + ' to-' + cifra.color2"
           >
             <img class="w-40 inline-block mt-10" :src="cifra.icon" alt="" />
             <br />
@@ -176,7 +268,7 @@
 
       <div class="w-full md:mt-20 mt-10 text-center">
         <h1 class="text-sky-500 leading-snug text-4xl text-center w-full">
-          Estación Comfort
+          Estación <b class="font-ailerons">CONFORT</b>
         </h1>
         <h2 class="text-blue-800 text-3xl mt-5 mb-10">
           Medición cada 5 minutos de
@@ -279,7 +371,7 @@
         id="cotiza"
         class="text-gray-700 leading-snug md:mt-20 mt-10 text-4xl text-center w-full"
       >
-        Contrata Comfort
+        Contrata <b class="font-ailerons">confort</b>
       </h1>
     </div>
 
@@ -315,13 +407,9 @@
             class="flex gap-4 mt-5 justify-center md:justify-start"
             v-if="instruccion.btns.length > 1"
           >
-            <img
-              class="w-20"
-              v-for="(btn, i) in instruccion.btns"
-              :key="i"
-              v-bind:src="btn.icon"
-              alt=""
-            />
+            <a v-for="(btn, i) in instruccion.btns" :key="i" :href="btn.lnk">
+              <img class="w-20" v-bind:src="btn.icon" alt="" />
+            </a>
           </div>
         </div>
       </div>
@@ -330,6 +418,7 @@
     <div class="w-full mt-20">
       <h1
         class="text-gray-700 leading-snug md:mt-10 mt-10 text-2xl text-center w-full"
+        id="formulario"
       >
         Formulario de solicitud de contacto
       </h1>
@@ -343,6 +432,7 @@
     >
       <div class="md:w-1/3 flex justify-center">
         <div class="w-full grid grid-cols-2 gap-x-10">
+          <input class="hidden" v-model="formulario.honeypot" />
           <div class="col-span-2 mt-5">
             <p class="w-full text-center text-xl">Nombre persona de contacto</p>
             <input
@@ -417,6 +507,7 @@
     </div>
     <div class="w-full xl:h-[450px] h-[600px] footer"></div>
     <div
+      id="footer"
       class="w-full xl:h-[450px] h-[600px] footer bg-zinc-800 absolute bottom-0"
     >
       <div class="w-full flex justify-center">
@@ -462,7 +553,7 @@
               class="fill-white w-12 grayscale-0"
               alt=""
             />
-            <p class="ml-5 text-white text-lg">holacomfort.minding.ai</p>
+            <p class="ml-5 text-white text-lg">hola@confort.minding.ai</p>
           </div>
           <div class="col-span-3 mt-10">
             <p class="text-white text-center">
@@ -508,7 +599,7 @@ comfortIcons.value = [
   },
   {
     img: new URL("../assets/img/icono_co2.svg", import.meta.url).href,
-    txt: "Con niveles de CO2 aceptables",
+    txt: "Con niveles de CO2 adecuados",
   },
 ]
 const benefits = ref()
@@ -621,20 +712,20 @@ instrucciones.value = [
     btns: [
       {
         icon: new URL("../assets/img/icono_telefono.svg", import.meta.url).href,
-        lnk: "",
+        lnk: "#footer",
       },
       {
         icon: new URL("../assets/img/icono_mail.svg", import.meta.url).href,
-        lnk: "",
+        lnk: "#footer",
       },
       {
         icon: new URL("../assets/img/icono_formulario.svg", import.meta.url)
           .href,
-        lnk: "",
+        lnk: "#formulario",
       },
       {
         icon: new URL("../assets/img/icono_mapa.svg", import.meta.url).href,
-        lnk: "",
+        lnk: "#footer",
       },
     ],
   },
@@ -684,10 +775,10 @@ cifras.value = [
   {
     txt1: "Hasta",
     num: "15%",
-    txt2: "más de rendimiento",
+    txt2: "más de rendimiento académico",
     color1: "fuchsia-700",
     color2: "violet-700",
-    icon: new URL("../assets/img/icono_rendimiento.svg", import.meta.url).href,
+    icon: new URL("../assets/img/icono_estudio.svg", import.meta.url).href,
   },
   {
     txt1: "Garantizado",
@@ -701,6 +792,7 @@ cifras.value = [
 
 const formulario = ref()
 formulario.value = {
+  honeypot: "",
   region: { region: "", comunas: [] },
   comuna: "",
 }

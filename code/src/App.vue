@@ -1,7 +1,7 @@
 <template>
   <div ref="root">
     <div class="w-full absolute top-0 z-10">
-      <MainNav ref="mainNav" />
+      <AlertComp ref="alertComp" />
     </div>
     <div class="flex">
       <div class="flex-column w-full">
@@ -13,6 +13,7 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance } from "vue"
 import axios from "./services/axios"
+import AlertComp from "./components/AlertComp.vue"
 const mainData = ref()
 
 const getMain = async () => {
