@@ -15,17 +15,20 @@
           type="text"
           placeholder="usuario"
           v-model="form.user"
+          @keydown.enter="login()"
         />
         <input
           class="w-full mt-10 bg-gray-100 shadow-sm h-10 px-5 rounded-md"
           type="password"
           placeholder="contraseña"
           v-model="form.pass"
+          @keydown.enter="login()"
         />
 
         <button
           class="w-full mt-10 bg-sky-500 hover:bg-blue-600 text-white h-10 rounded-md"
           v-on:click="login()"
+          @keydown.enter="login()"
         >
           Ingresar
         </button>

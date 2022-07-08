@@ -1,18 +1,45 @@
 <template>
   <div class="root">
     <nav
-      class="h-screen fixed flex-wrap bg-[#05042B] md:w-28 flex justify-center items-start place-items-start gap-10 pt-5 p-1"
+      class="h-screen fixed flex-wrap bg-[#05042B] md:w-20 flex justify-center items-start place-items-start gap-10 pt-5"
     >
-      <img src="@/assets/white_logo.svg" class="w-14 mb-5" alt="" />
-      <ul class="w-2/3 h-full p-2">
-        <li class="mb-14" v-for="(item, i) in menu" :key="i">
-          <a href="#" class="text-white">
-            <img :src="item.icon" class="w-full" alt="" />
+      <img src="@/assets/white_logo.svg" class="w-14 mb-3" alt="" />
+      <ul class="w-2/3">
+        <li class="mb-8" v-for="(item, i) in menu" :key="i">
+          <a
+            href="#"
+            class="text-white flex flex-wrap justify-center h-14 w-14 hover:bg-blue-900 rounded-lg"
+          >
+            <img :src="item.icon" class="w-3/4" alt="" />
+          </a>
+        </li>
+      </ul>
+
+      <ul>
+        <li
+          class="rounded-lg bg-white text-black w-14 h-14 mb-10 flex text-2xl flex-wrap items-center justify-center place-item-end"
+        >
+          <a class="block text-2xl" href=""> DM </a>
+        </li>
+        <li class="mb-8">
+          <a
+            href="#"
+            class="text-white flex flex-wrap justify-center h-14 w-14 hover:bg-blue-900 rounded-lg"
+          >
+            <img src="@/assets/img/icono_campana.svg" class="w-3/4" alt="" />
+          </a>
+        </li>
+        <li class="mb-8">
+          <a
+            href="#"
+            class="text-white flex flex-wrap justify-center h-14 w-14 hover:bg-blue-900 rounded-lg"
+          >
+            <img src="@/assets/img/icono_setup.svg" class="w-3/4" alt="" />
           </a>
         </li>
       </ul>
     </nav>
-    <div class="ml-28">
+    <div class="ml-20">
       <router-view />
     </div>
   </div>
@@ -41,6 +68,11 @@ menu.value = [
     icon: new URL("../assets/img/icono_alumno.svg", import.meta.url).href,
     name: "Personas",
     path: "/plataforma/personas",
+  },
+  {
+    icon: new URL("../assets/img/icono_reporte.svg", import.meta.url).href,
+    name: "Reportes",
+    path: "/plataforma/reportes",
   },
 ]
 

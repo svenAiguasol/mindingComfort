@@ -430,79 +430,134 @@
     <div
       class="w-full mt-5 px-20 bg-gradient-to-tr from-sky-500 to-blue-600 text-white text-left p-5 flex place-items-center items-center justify-items-center justify-center"
     >
-      <div class="md:w-1/3 flex justify-center">
-        <div class="w-full grid grid-cols-2 gap-x-10">
-          <input class="hidden" v-model="formulario.honeypot" />
-          <div class="col-span-2 mt-5">
-            <p class="w-full text-center text-xl">Nombre persona de contacto</p>
-            <input
-              class="w-full rounded-md mt-5 h-10 text-black px-5"
-              type="text"
-              v-model="formulario.nombre"
-            />
-            <p class="w-full text-center mt-5 text-xl">
-              Nombre de establecimiento
-            </p>
-            <input
-              class="w-full rounded-md mt-5 h-10 text-black px-5"
-              type="text"
-              v-model="formulario.establecimiento"
-            />
-          </div>
-          <div class="md:col-span-1 col-span-2 mt-5">
-            <p class="w-full text-center text-xl">Región</p>
-            <select
-              v-model="formulario.region"
-              v-on:change="getComunas()"
-              class="w-full rounded-md mt-5 h-10 text-black px-5"
-              type="text"
-              placeholder="Selecciona una región"
-            >
-              <option
-                v-for="(region, i) in regiones"
-                :key="i"
-                :value="region.region"
-              >
-                {{ region.region }}
-              </option>
-            </select>
-            <p class="w-full text-center mt-5 text-xl">Comuna</p>
-
-            <select
-              v-model="formulario.comuna"
-              value=""
-              class="w-full rounded-md mt-5 h-10 text-black px-5"
-              type="text"
-            >
-              <option v-for="(comuna, i) in comunas" :key="i" :value="comuna">
-                {{ comuna }}
-              </option>
-            </select>
-          </div>
-          <div class="md:col-span-1 col-span-2 mt-5">
-            <p class="w-full text-center text-xl">Teléfono</p>
-            <input
-              class="w-full rounded-md mt-5 h-10 text-black px-5"
-              type="text"
-              placeholder="+56123456789"
-              v-model="formulario.fono"
-            />
-            <p class="w-full text-center mt-5 text-xl">Correo electrónico</p>
-            <input
-              class="w-full rounded-md mt-5 h-10 text-black px-5"
-              type="text"
-              placeholder="persona@dominio.cl"
-              v-model="formulario.mail"
-            />
-          </div>
-          <div class="col-span-2 mt-10 text-center flex justify-center">
-            <a
-              v-on:click="sendMail()"
-              class="border-white border-2 w-80 block text-center rounded-full p-2 cursor-pointer hover:bg-white hover:text-sky-600 text-xl"
-              >Enviar solicitud</a
-            >
-          </div>
+      <div
+        v-if="sentMail"
+        class="md:w-1/3 h-40 flex flex-wrap justify-center items-center place-content-center"
+      >
+        <div class="w-full grid text-center text-2xl">
+          Gracias por contactarnos <br />
+          Nos pondremos en contacto en menos de 48 hrs
         </div>
+      </div>
+      <div class="w-2/5" v-if="!sentMail">
+        <FormKit type="form" :actions="false" @submit="sendMail">
+          <div class="md:w-full flex justify-center">
+            <div class="w-full grid grid-cols-2 gap-x-10">
+              <input class="hidden" v-model="formulario.honeypot" />
+              <div class="col-span-2 mt-5">
+                <p class="w-full text-center text-xl">
+                  Nombre persona de contacto
+                </p>
+                <FormKit
+                  type="text"
+                  :validation="[
+                    ['required'],
+                    [
+                      'matches',
+                      /^([a-zA-Z]*) ([a-zA-Z]*) ?(?:[a-zA-Z]*)? ?(?:[a-zA-Z]*)? ?(?:[a-zA-Z]*)?$/,
+                    ],
+                  ]"
+                  v-model="formulario.nombre"
+                  :validation-messages="{
+                    required: 'El nombre es requerido',
+                    matches: 'Debe ingresar al menos un nombre y un apellido',
+                  }"
+                />
+                <p class="w-full text-center mt-5 text-xl">
+                  Nombre de establecimiento
+                </p>
+                <FormKit
+                  type="text"
+                  v-model="formulario.establecimiento"
+                  :validation="[['required']]"
+                  :validation-messages="{
+                    required: 'El nombre del establecimiento es requerido',
+                  }"
+                />
+              </div>
+              <div class="md:col-span-1 col-span-2 mt-5">
+                <p class="w-full text-center text-xl">Región</p>
+                <FormKit
+                  type="select"
+                  :validation="[['required']]"
+                  :validation-messages="{
+                    required: 'Debe seleccionar una región',
+                  }"
+                  v-model="formulario.region"
+                  placeholder="Selecciona una región"
+                >
+                  <option
+                    v-for="(region, i) in regiones"
+                    :key="i"
+                    :value="region.region"
+                  >
+                    {{ region.region }}
+                  </option>
+                </FormKit>
+                <p class="w-full text-center mt-5 text-xl">Comuna</p>
+
+                <FormKit
+                  v-model="formulario.comuna"
+                  value=""
+                  type="select"
+                  :validation="[['required']]"
+                  :validation-messages="{
+                    required: 'Debe seleccionar una comuna',
+                  }"
+                >
+                  <option
+                    v-for="(comuna, i) in comunas"
+                    :key="i"
+                    :value="comuna"
+                  >
+                    {{ comuna }}
+                  </option>
+                </FormKit>
+              </div>
+              <div class="md:col-span-1 col-span-2 mt-5">
+                <p class="w-full text-center text-xl">Teléfono</p>
+                <FormKit
+                  :validation="[['required'], ['matches', /^\+[0-9]{11}$/]]"
+                  :validation-messages="{
+                    required: 'El teléfono es requerido',
+                    matches:
+                      'El teléfono debe ser un número de 9 dígitos y partiendo con el código de país +(país) ej: +56912345678',
+                  }"
+                  type="text"
+                  placeholder="+56123456789"
+                  v-model="formulario.fono"
+                />
+                <p class="w-full text-center mt-5 text-xl">
+                  Correo electrónico
+                </p>
+                <FormKit
+                  class="w-full rounded-md mt-5 h-10 text-black px-5"
+                  type="text"
+                  :validation="[['required'], ['email']]"
+                  :validation-messages="{
+                    required: 'El correo electrónico es requerido',
+                    email:
+                      'El correo debe estar en el formato nombre@dominio.com',
+                  }"
+                  placeholder="persona@dominio.cl"
+                  v-model="formulario.mail"
+                />
+              </div>
+              <div class="col-span-2 mt-10 text-center flex justify-center">
+                <FormKit
+                  type="submit"
+                  :classes="{
+                    input: {
+                      $reset: true,
+                    },
+                  }"
+                  input-class="border-white border-2 w-80 block text-center rounded-full p-2 cursor-pointer hover:bg-white hover:text-sky-600 text-xl"
+                  >Enviar solicitud</FormKit
+                >
+              </div>
+            </div>
+          </div>
+        </FormKit>
       </div>
     </div>
     <div class="w-full xl:h-[450px] h-[600px] footer"></div>
@@ -573,7 +628,8 @@
 </template>
 <script setup>
 import axios from "axios"
-import { ref, onMounted, getCurrentInstance } from "vue"
+import _ from "lodash"
+import { ref, onMounted, getCurrentInstance, watch } from "vue"
 //const props = defineProps(["mainData"])
 const comfortIcons = ref()
 comfortIcons.value = [
@@ -754,8 +810,9 @@ function getComunas() {
 
 const sentMail = ref()
 sentMail.value = false
-function sendMail() {
-  axios.post("/sendMail", formulario.value).then((res) => {
+async function sendMail() {
+  console.log("sendMail")
+  axios.post("/sendMail", { cuerpo: formulario.value }).then((res) => {
     if (res.status === 200) {
       sentMail.value = true
     }
@@ -768,24 +825,24 @@ cifras.value = [
     txt1: "Hasta",
     num: "50%",
     txt2: "menos de enfermedades",
-    color1: "lime-500",
-    color2: "green-700",
+    color1: "sky-300",
+    color2: "sky-700",
     icon: new URL("../assets/img/icono_enfermedad.svg", import.meta.url).href,
   },
   {
     txt1: "Hasta",
     num: "15%",
     txt2: "más de rendimiento académico",
-    color1: "fuchsia-700",
-    color2: "violet-700",
+    color1: "lime-500",
+    color2: "green-600",
     icon: new URL("../assets/img/icono_estudio.svg", import.meta.url).href,
   },
   {
     txt1: "Garantizado",
     num: "100%",
     txt2: "comunidad más feliz",
-    color1: "orange-600",
-    color2: "rose-600",
+    color1: "orange-400",
+    color2: "orange-600",
     icon: new URL("../assets/img/icono_comunidad.svg", import.meta.url).href,
   },
 ]
@@ -793,10 +850,19 @@ cifras.value = [
 const formulario = ref()
 formulario.value = {
   honeypot: "",
-  region: { region: "", comunas: [] },
+  region: "",
   comuna: "",
 }
 const regiones = ref()
+
+watch(
+  () => _.cloneDeep(formulario.value),
+  (currentValue, oldValue) => {
+    console.log(currentValue)
+    console.log(oldValue)
+    getComunas()
+  }
+)
 regiones.value = [
   {
     region: "Arica y Parinacota",

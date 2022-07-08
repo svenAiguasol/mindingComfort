@@ -14,6 +14,7 @@
 import { ref, onMounted, getCurrentInstance } from "vue"
 import axios from "./services/axios"
 import AlertComp from "./components/AlertComp.vue"
+
 const mainData = ref()
 
 const getMain = async () => {

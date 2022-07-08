@@ -8,6 +8,7 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@formkit/vue": "^1.0.0-beta.9",
     "axios": "^0.26.1",
     "bootstrap": "^5.1.3",
     "mitt": "^3.0.0",
