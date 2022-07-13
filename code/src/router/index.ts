@@ -3,8 +3,15 @@ import MainPage from "../components/MainPage.vue"
 import LoginPage from "../components/LoginPage.vue"
 import PlatformPage from "../components/PlatformPage.vue"
 import DashboardPage from "../components/DashboardPage.vue"
+import ClassroomPage from "../components/ClassroomPage.vue"
+import PeoplePage from "../components/PeoplePage.vue"
+import ReportPage from "../components/ReportPage.vue"
+import ProfilePage from "../components/ProfilePage.vue"
+import AlertsPage from "../components/AlertsPage.vue"
+import AdminPage from "../components/AdminPage.vue"
+
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory("/"),
   routes: [
     {
       path: "/",
@@ -25,6 +32,30 @@ const router = createRouter({
         {
           path: "dashboard",
           component: DashboardPage,
+        },
+        {
+          path: "salas",
+          component: ClassroomPage,
+        },
+        {
+          path: "personas",
+          component: PeoplePage,
+        },
+        {
+          path: "reportes",
+          component: ReportPage,
+        },
+        {
+          path: "perfil",
+          component: ProfilePage,
+        },
+        {
+          path: "alertas",
+          component: AlertsPage,
+        },
+        {
+          path: "admin",
+          component: AdminPage,
         },
       ],
     },

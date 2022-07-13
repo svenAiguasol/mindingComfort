@@ -6,18 +6,19 @@
       <img src="@/assets/white_logo.svg" class="w-14 mb-3" alt="" />
       <ul class="w-2/3">
         <li class="mb-8" v-for="(item, i) in menu" :key="i">
-          <a
-            href="#"
+          <router-link
+            :to="item.path"
             class="text-white flex flex-wrap justify-center h-14 w-14 hover:bg-blue-900 rounded-lg"
+            :class="{ 'bg-blue-900': url_active(item.path) }"
           >
             <img :src="item.icon" class="w-3/4" alt="" />
-          </a>
+          </router-link>
         </li>
       </ul>
 
       <ul>
         <li
-          class="rounded-lg bg-white text-black w-14 h-14 mb-10 flex text-2xl flex-wrap items-center justify-center place-item-end"
+          class="rounded-lg border-white border-2 text-white hover:bg-white hover:text-blue-900 w-14 h-14 mb-10 flex text-2xl flex-wrap items-center justify-center place-item-end"
         >
           <a class="block text-2xl" href=""> DM </a>
         </li>
@@ -40,7 +41,7 @@
       </ul>
     </nav>
     <div class="ml-20">
-      <router-view />
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -76,5 +77,7 @@ menu.value = [
   },
 ]
 
-function login() {}
+function url_active(url) {
+  return window.location.pathname.indexOf(url) > -1
+}
 </script>

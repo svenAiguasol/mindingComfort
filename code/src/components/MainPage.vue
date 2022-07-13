@@ -1,10 +1,8 @@
 <template>
   <div class="relative" ref="root">
-    <div class="w-full absolute top-0 z-10">
+    <div class="w-full md:absolute sticky top-0 z-20">
       <nav class="w-full bg-black/[.6] h-18 py-5 sm:px-4 z-10">
-        <div
-          class="container flex flex-wrap justify-between items-center mx-auto"
-        >
+        <div class="container flex justify-between items-center mx-auto">
           <a href="#home" class="flex items-center">
             <img
               src="@/assets/logo.svg"
@@ -16,35 +14,27 @@
               ><h3 class="logo hidden md:block">confort</h3></span
             >
           </a>
-          <button
-            data-collapse-toggle="mobile-menu"
-            type="button"
-            class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-            aria-controls="mobile-menu"
-            aria-expanded="false"
-          ></button>
-          <div class="flex items-center md:order-2">
-            <button
-              data-collapse-toggle="mobile-menu-2"
-              type="button"
-              class="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg xl:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-              aria-controls="mobile-menu-2"
-              aria-expanded="false"
-            >
-              <!-- <span class="sr-only">Open main menu</span> -->
-              <svg
-                class="hidden w-6 h-6"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </button>
+          <div class="md:hidden flex justify-center gap-10 items-center w-full">
+            <a
+              class="menuPoint h-3 w-3 rounded-full border-white border-2"
+              href="#home"
+            ></a>
+            <a
+              class="menuPoint h-3 w-3 rounded-full border-white border-2"
+              href="#como-funciona"
+            ></a>
+            <a
+              class="menuPoint h-3 w-3 rounded-full border-white border-2"
+              href="#tecnologia"
+            ></a>
+            <a
+              class="menuPoint h-3 w-3 rounded-full border-white border-2"
+              href="#tarifas"
+            ></a>
+            <a
+              class="menuPoint h-3 w-3 rounded-full border-white border-2"
+              href="#cotiza"
+            ></a>
           </div>
           <div
             class="hidden justify-between items-center w-full xl:flex md:w-auto md:order-1"
@@ -98,20 +88,21 @@
       </nav>
     </div>
     <!-- top Banner ################################## -->
-    <div id="home" class="top-banner relative w-full h-100">
+    <div id="home" class="scrollPoint top-banner relative w-full h-100 z-80">
       <div
-        class="w-full h-screen bg-[url('@/assets/img/fondo_top_2.jpg')] md:bg-cover bg-[length:1200px] bg-center bg-no-repeat"
+        class="w-full h-screen bg-[url('@/assets/img/fondo_top_2.jpg')] md:bg-cover bg-[length:1200px] bg-center bg-no-repeat z-10"
         alt=""
       >
         <div class="w-full h-screen bg-black/[0.4]"></div>
         <h1
-          class="absolute leading-snug text-white left-1/2 text-4xl xl:top-3/4 md:top-1/2 top-1/2 z-10 text-center md:w-2/3 w-full transform -translate-x-1/2 mix-blend-screen"
+          class="absolute leading-snug text-white left-1/2 md:p-0 p-5 text-4xl xl:top-3/4 md:top-1/2 top-1/2 z-10 text-center md:w-2/3 w-full transform -translate-x-1/2 mix-blend-screen"
         >
-          Sabemos de tu compromiso con su educación <br />
-          y <br class="md:hidden block" />
-          <span class="bg-white px-3 ml-3 rounded-md text-black"
-            >te ayudamos a cumplirlo</span
-          >
+          Sabemos de tu compromiso <br />
+          con su educación y
+          <br class="md:hidden block" />
+          <div class="bg-white px-3 ml-3 inline-block rounded-md text-black">
+            te ayudamos a cumplirlo
+          </div>
         </h1>
       </div>
     </div>
@@ -121,13 +112,14 @@
     <div class="flex flex-col content-center items-center">
       <div class="md:w-1/2 w-full">
         <h1
-          class="text-gray-700 leading-snug mt-20 text-4xl text-center w-full"
+          class="text-gray-700 leading-snug mt-20 text-4xl text-center w-full p-5 md:p-0"
         >
           Y para cumplirlo, tus hij@s necesitan y se merecen
-          <span
-            class="bg-gradient-to-r from-sky-600 to-blue-600 px-5 ml-3 rounded-md text-white"
-            >espacios confortables</span
+          <div
+            class="bg-gradient-to-r from-sky-600 inline-block to-blue-600 px-5 ml-3 rounded-md text-white"
           >
+            espacios confortables
+          </div>
         </h1>
       </div>
 
@@ -136,7 +128,7 @@
           class="absolute z-1 top-0 right-0 w-full bg-gradient-to-r from-sky-600 to-blue-600 xl:h-40 md:h-80 h-96"
         ></div>
         <div
-          class="px-20 grid xl:grid-cols-6 grid-cols-3 md:gap-1 md:gap-y-0 gap-y-20 items-center"
+          class="px-10 grid xl:grid-cols-6 grid-cols-3 md:gap-1 md:gap-y-0 gap-y-20 items-center"
         >
           <div
             v-for="(val, i) in comfortIcons"
@@ -187,7 +179,7 @@
       <div class="md:w-1/2 w-full mt-10">
         <h1
           id="como-funciona"
-          class="text-gray-700 leading-snug md:mt-20 mt-40 text-4xl text-center w-full"
+          class="scrollPoint text-gray-700 leading-snug md:mt-20 mt-40 text-4xl text-center w-full"
         >
           Y haremos todo lo posible para que lo consigas
         </h1>
@@ -262,7 +254,7 @@
 
       <div
         id="tecnologia"
-        class="w-full md:mt-20 mt-10 md:h-[600px] h-96 bg-[url('@/assets/img/fondo_sensor.jpg')] md:bg-[length:1200px] bg-[length:600px] bg-center bg-no-repeat"
+        class="scrollPoint w-full md:mt-20 mt-10 md:h-[600px] h-96 bg-[url('@/assets/img/fondo_sensor.jpg')] md:bg-[length:1200px] bg-[length:600px] bg-center bg-no-repeat"
         alt=""
       ></div>
 
@@ -311,7 +303,7 @@
     <div class="w-full mt-5">
       <h1
         id="tarifas"
-        class="text-gray-700 leading-snug md:mt-20 mt-10 text-4xl text-center w-full"
+        class="scrollPoint text-gray-700 leading-snug md:mt-20 mt-10 text-4xl text-center w-full"
       >
         Detalles del servicio y tarifas
       </h1>
@@ -369,7 +361,7 @@
     <div class="w-full mt-5">
       <h1
         id="cotiza"
-        class="text-gray-700 leading-snug md:mt-20 mt-10 text-4xl text-center w-full"
+        class="scrollPoint text-gray-700 leading-snug md:mt-20 mt-10 text-4xl text-center w-full"
       >
         Contrata <b class="font-ailerons">confort</b>
       </h1>
@@ -428,7 +420,7 @@
     </div>
 
     <div
-      class="w-full mt-5 px-20 bg-gradient-to-tr from-sky-500 to-blue-600 text-white text-left p-5 flex place-items-center items-center justify-items-center justify-center"
+      class="w-full mt-5 md:px-20 bg-gradient-to-tr from-sky-500 to-blue-600 text-white text-left p-5 flex place-items-center items-center justify-items-center justify-center"
     >
       <div
         v-if="sentMail"
@@ -439,9 +431,9 @@
           Nos pondremos en contacto en menos de 48 hrs
         </div>
       </div>
-      <div class="w-2/5" v-if="!sentMail">
+      <div class="md:w-2/5" v-if="!sentMail">
         <FormKit type="form" :actions="false" @submit="sendMail">
-          <div class="md:w-full flex justify-center">
+          <div class="w-full flex justify-center">
             <div class="w-full grid grid-cols-2 gap-x-10">
               <input class="hidden" v-model="formulario.honeypot" />
               <div class="col-span-2 mt-5">
@@ -631,6 +623,28 @@ import axios from "axios"
 import _ from "lodash"
 import { ref, onMounted, getCurrentInstance, watch } from "vue"
 //const props = defineProps(["mainData"])
+
+window.addEventListener("scroll", handleScroll)
+
+const pointers = document.getElementsByClassName("scrollPoint")
+const points = document.getElementsByClassName("menuPoint")
+console.log(pointers.length)
+function handleScroll(evt) {
+  //console.log(pointers.length)
+  //console.log(window.scrollY)
+  var active = false
+  for (let i = 0; i < pointers.length; i++) {
+    const pointer = pointers[i]
+    const rect = pointer.getBoundingClientRect()
+    if (rect.top < window.innerHeight) {
+      points[i].classList.add("active")
+      active = true
+    } else {
+      points[i].classList.remove("active")
+    }
+  }
+}
+
 const comfortIcons = ref()
 comfortIcons.value = [
   {
@@ -1321,5 +1335,8 @@ regiones.value = [
   left: 12px;
   height: calc(100% - 24px);
   width: calc(100% - 24px);
+}
+.menuPoint.active {
+  background-color: #fff;
 }
 </style>
