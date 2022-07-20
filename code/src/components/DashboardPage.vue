@@ -27,7 +27,7 @@
             <div class="p-5" v-for="(item, index) in leyenda" :key="index">
               <div
                 class="h-5 w-5 inline-block mr-3"
-                :class="'bg-[' + item.color + ']'"
+                :style="'background-color:' + item.color"
               ></div>
               <div class="text-small inline-block">{{ item.name }}</div>
             </div>
@@ -40,6 +40,12 @@
         <h3 class="font-ailerons text-2xl bg-white text-left mt-10">
           Recomendaciones activas
         </h3>
+        <div class="flex justify-center items-center">
+          <img class="h-8 mr-5" src="@/assets/img/icono_ticket.svg" alt="" />
+          Instalado en X salas
+          <img class="h-8 mr-5 ml-5" src="@/assets/img/icono_up.svg" alt="" />
+          Potencial de instalar en X salas
+        </div>
         <div class="pt-5 px-10 mt-5 mb-10 w-full rounded-2xl">
           <div class="w-full flex flex-wrap justify-center">
             <div

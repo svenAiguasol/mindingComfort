@@ -50,8 +50,12 @@
 import axios from "../services/axios"
 import { ref, inject } from "vue"
 
-//const emit = defineEmits(["addAlert"])
 const emitter = inject("emitter")
+const router = inject("router")
+
+if (localStorage.getItem("token") == null) {
+  router.push("/login")
+}
 
 const menu = ref()
 menu.value = [

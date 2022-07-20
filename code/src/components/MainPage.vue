@@ -114,7 +114,7 @@
         <h1
           class="text-gray-700 leading-snug mt-20 text-4xl text-center w-full p-5 md:p-0"
         >
-          Y para cumplirlo, tus hij@s necesitan y se merecen
+          Y para cumplirlo, tus niñ@s necesitan y se merecen
           <div
             class="bg-gradient-to-r from-sky-600 inline-block to-blue-600 px-5 ml-3 rounded-md text-white"
           >
@@ -174,6 +174,16 @@
             </h2>
           </div>
         </div>
+      </div>
+
+      <div
+        class="md:w-1/2 w-full mt-10 md:mt-20 flex justify-center items-center"
+      >
+        <a
+          href=""
+          class="rounded-full border-2 border-blue-600 text-blue-600 p-3 md:w-40 w-full hover:bg-blue-600 hover:text-white"
+          >Fuente</a
+        >
       </div>
 
       <div class="md:w-1/2 w-full mt-10">

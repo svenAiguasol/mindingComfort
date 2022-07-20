@@ -65,7 +65,7 @@ donnut.value = {
     {
       name: "",
       type: "pie",
-      radius: ["60%", "70%"],
+      radius: ["55%", "70%"],
       avoidLabelOverlap: false,
       label: {
         normal: {

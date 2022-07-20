@@ -56,6 +56,7 @@ function login() {
     emitter.emit("addAlert", { type: "error", txt: "Ingrese un usuario" })
   }
   if (form.value.user == "demo" && form.value.pass == "demo") {
+    localStorage.setItem("token", "demo")
     router.push("/plataforma")
   }
 }
