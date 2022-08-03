@@ -3,6 +3,11 @@
     <div class="flex flex-wrap">
       <div class="h-min-screen w-4/5">
         <h3 class="font-ailerons text-4xl bg-white text-left">Dashboard</h3>
+
+        <h3 class="font-ailerons text-2xl bg-white text-left w-full mt-10">
+          Efectos del confort
+        </h3>
+        <ResultsComp :data="data.school.results"></ResultsComp>
         <h3 class="font-ailerons text-2xl bg-white text-left w-full mt-10">
           Salas
         </h3>
@@ -11,27 +16,32 @@
         >
           <div class="flex flex-wrap">
             <div class="w-60">
-              <donnut :data="general.values" :icon="iconos.general" />
-              <h2 class="text-gray-500">General</h2>
+              <donnut
+                :data="data.school.estado.general"
+                :icon="iconos.general"
+              />
+              <router-link
+                class="text-gray-500 bg-white border-2 w-28 border-gray-500 py-2 px-5 rounded-full hover:bg-gray-500 hover:text-white"
+                :to="'/plataforma/salas/general'"
+              >
+                general
+              </router-link>
             </div>
             <div
               class="w-40"
-              v-for="(dim, index) in general.children"
+              v-for="(dim, index) in data.school.estado"
               :key="index"
             >
-              <donnut :data="dim.values" :icon="iconos[dim.name]" />
-              <h2 class="text-gray-500">{{ dim.name }}</h2>
+              <donnut :data="dim" :icon="iconos[index]" />
+              <router-link
+                class="text-gray-500 bg-white border-2 border-gray-500 py-2 px-5 w-28 rounded-full hover:bg-gray-500 hover:text-white"
+                :to="'/plataforma/salas/' + index"
+              >
+                {{ index }}
+              </router-link>
             </div>
           </div>
-          <div class="w-full flex mt-10 justify-center">
-            <div class="p-5" v-for="(item, index) in leyenda" :key="index">
-              <div
-                class="h-5 w-5 inline-block mr-3"
-                :style="'background-color:' + item.color"
-              ></div>
-              <div class="text-small inline-block">{{ item.name }}</div>
-            </div>
-          </div>
+          <leyenda-comp></leyenda-comp>
           <!--<div class="w-80">
             <comfort-bar />
             "#8CC63F", "#FAEC21", "#F5911E", "#BF272D"
@@ -102,6 +112,7 @@
           </div>
         </div>
 
+        <!--
         <h3 class="font-ailerons text-2xl bg-white text-left">
           Recomendaciones pasivas
         </h3>
@@ -160,23 +171,31 @@
             </div>
           </div>
         </div>
+
+        -->
       </div>
       <div class="h-screen w-1/5 fixed right-0 top-0 bg-gray-100 p-10">
-        <alerts-comp></alerts-comp>
-        <h3 class="font-ailerons text-4xl text-left">Alertas</h3>
+        <netstats :data="data.school.estadoSensores"></netstats>
+        <alerts :data="data.alerts"></alerts>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import { ref } from "vue"
+import { ref, inject } from "vue"
 import Donnut from "./charts/Donnut.vue"
 import ComfortBar from "./charts/ComfortBar.vue"
-import AlertsComp from "./AlertsComp.vue"
+import BarSummaryVue from "./charts/BarSummary.vue"
+import ResultsComp from "./ResultsComp.vue"
+import Netstats from "./NetstatsComp.vue"
+import Alerts from "./AlertsComp.vue"
+import LeyendaComp from "./LeyendaComp.vue"
 
-const data = ref()
+const staticData = ref()
 
-data.value = [25, 25, 25, 25]
+staticData.value = [25, 25, 25, 25]
+
+const data = inject("data")
 
 const general = ref()
 general.value = {
@@ -195,7 +214,7 @@ const iconos = ref({
   general: new URL("../assets/img/icono_silla_gris.svg", import.meta.url).href,
   frio: new URL("../assets/img/icono_frio_gris.svg", import.meta.url).href,
   calor: new URL("../assets/img/icono_calor_gris.svg", import.meta.url).href,
-  Co2: new URL("../assets/img/icono_co2_gris.svg", import.meta.url).href,
+  co2: new URL("../assets/img/icono_co2_gris.svg", import.meta.url).href,
   humedad: new URL("../assets/img/icono_humedad_gris.svg", import.meta.url)
     .href,
   ruido: new URL("../assets/img/icono_ruido_gris.svg", import.meta.url).href,

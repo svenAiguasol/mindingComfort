@@ -34,7 +34,11 @@ const router = createRouter({
           component: DashboardPage,
         },
         {
-          path: "salas",
+          path: "salas/:confortType?",
+          component: ClassroomPage,
+        },
+        {
+          path: "salas/ver/:idSala?",
           component: ClassroomPage,
         },
         {

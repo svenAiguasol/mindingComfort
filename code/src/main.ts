@@ -6,6 +6,7 @@ import AlertComp from "./components/AlertComp.vue"
 import "./index.css"
 import { plugin, defaultConfig } from "@formkit/vue"
 import mitt from "mitt"
+import generateFullData from "./services/dataGenerator"
 
 const emitter = mitt()
 const app = createApp(App)
@@ -24,10 +25,22 @@ app.use(
     },
   })
 )
+let data
+async function getFullData() {
+  //data = await generateFullData(3, 3, 5, 35)
+  data = await generateFullData(2, 2, 3, 35)
+  app.component("MainNav", MainNav)
+  app.component("AlertComp", AlertComp)
 
-app.component("MainNav", MainNav)
-app.component("AlertComp", AlertComp)
-
-app.provide("emitter", emitter)
-app.provide("router", router)
-app.mount("#app")
+  app.provide("emitter", emitter)
+  app.provide("router", router)
+  app.provide("data", data)
+  app.mount("#app")
+}
+getFullData()
+/*
+const data = localStorage.getItem("data")
+  ? JSON.parse(localStorage.getItem("data"))
+  : generateFullData(3, 3, 5, 35)
+*/
+//localStorage.setItem("data", JSON.stringify(data))

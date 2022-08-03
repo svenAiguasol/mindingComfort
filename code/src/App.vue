@@ -35,7 +35,6 @@ onMounted(() => {
   Array.prototype.forEach.call(section, function (e) {
     sections[e.id] = e.offsetTop
   })
-  console.log(sections)
   window.onscroll = function () {
     var scrollPosition =
       document.documentElement.scrollTop || document.body.scrollTop
@@ -71,5 +70,11 @@ h5 {
 }
 #app .logo {
   font-family: ailerons;
+}
+.popupbox {
+  background-color: #2c3e50;
+  color: #fff;
+  padding: 15px;
+  border-radius: 10px;
 }
 </style>
