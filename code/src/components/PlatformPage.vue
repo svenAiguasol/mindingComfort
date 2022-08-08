@@ -69,7 +69,7 @@ menu.value = [
     name: "Salas",
     path: "/plataforma/salas",
   },
-  {
+  /*{
     icon: new URL("../assets/img/icono_alumno.svg", import.meta.url).href,
     name: "Personas",
     path: "/plataforma/personas",
@@ -78,7 +78,7 @@ menu.value = [
     icon: new URL("../assets/img/icono_reporte.svg", import.meta.url).href,
     name: "Reportes",
     path: "/plataforma/reportes",
-  },
+  },*/
 ]
 
 function url_active(url) {

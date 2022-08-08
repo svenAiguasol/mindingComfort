@@ -28,13 +28,21 @@ app.use(
 let data
 async function getFullData() {
   //data = await generateFullData(3, 3, 5, 35)
-  data = await generateFullData(2, 2, 3, 35)
+  data = await generateFullData(2, 2, 7, 35)
+  const limitValues = {
+    calor: [24, 27, 30],
+    frio: [18, 16, 14],
+    humedad: [60, 75, 90],
+    co2: [1000, 1500, 2000],
+    ruido: [40, 50, 60],
+  }
   app.component("MainNav", MainNav)
   app.component("AlertComp", AlertComp)
 
   app.provide("emitter", emitter)
   app.provide("router", router)
   app.provide("data", data)
+  app.provide("limitValues", limitValues)
   app.mount("#app")
 }
 getFullData()

@@ -9,6 +9,9 @@ const diasMes = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 function getNextChar(char) {
   return String.fromCharCode(char.charCodeAt(0) + 1)
 }
+function getNextNChar(char, n) {
+  return String.fromCharCode(char.charCodeAt(0) + n)
+}
 
 async function fetchAsync(url) {
   let response = await fetch(url)
@@ -117,8 +120,8 @@ function generateRandomSeries(horario, ventNat, fecha, feriados) {
           if (t >= fecha) {
             return series
           }
-          series.tiempo.push(t)
           t = new Date(ti.getTime() + (i * 1000 * 3600) / divisionesHorarias)
+          series.tiempo.push(moment(t).format("YYYY-MM-DD HH:mm"))
           //console.log(t)
           //console.log(t < inicioClases)
           const temperaturaBasal =
@@ -477,6 +480,42 @@ const generateFullData = async (nb, nf, nc, np) => {
     },
   }
 
+  const totalSalas = nb * nf * nc // para ciclo completo 1 letra al menos son 14 salas considerando prekinder y kinder
+  const nivelesPosibles = [
+    { nombre: "prekinder", cantidad: 0, letra: "A", niveles: [] },
+    { nombre: "kinder", cantidad: 0, letra: "A", niveles: [] },
+    { nombre: "primero básico", cantidad: 0, letra: "A", niveles: [] },
+    { nombre: "segundo básico", cantidad: 0, letra: "A", niveles: [] },
+    { nombre: "tercero básico", cantidad: 0, letra: "A", niveles: [] },
+    { nombre: "cuarto básico", cantidad: 0, letra: "A", niveles: [] },
+    { nombre: "quinto básico", cantidad: 0, letra: "A", niveles: [] },
+    { nombre: "sexto básico", cantidad: 0, letra: "A", niveles: [] },
+    { nombre: "séptimo básico", cantidad: 0, letra: "A", niveles: [] },
+    { nombre: "octavo básico", cantidad: 0, letra: "A", niveles: [] },
+    { nombre: "primero medio", cantidad: 0, letra: "A", niveles: [] },
+    { nombre: "segundo medio", cantidad: 0, letra: "A", niveles: [] },
+    { nombre: "tercero medio", cantidad: 0, letra: "A", niveles: [] },
+    { nombre: "cuarto medio", cantidad: 0, letra: "A", niveles: [] },
+  ]
+
+  let niveles = []
+  let j = 0
+  for (let i = 0; i < totalSalas; i++) {
+    nivelesPosibles[j].cantidad++
+    const nuevoNivel = {
+      nombre:
+        nivelesPosibles[j].nombre +
+        " " +
+        getNextNChar(nivelesPosibles[j].letra, nivelesPosibles[j].cantidad - 1),
+    }
+    nivelesPosibles[j].niveles.push(nuevoNivel)
+    niveles.push(nuevoNivel)
+
+    j = j < nivelesPosibles.length - 1 ? j + 1 : 0
+  }
+  const totalAlumnos = totalSalas * np
+  console.log(niveles)
+  let cursos = []
   let students = []
   let teachers = []
   let classrooms = []
@@ -569,6 +608,7 @@ const generateFullData = async (nb, nf, nc, np) => {
           },*/
           horario: horarioDefault,
           alertas: [],
+          curso: niveles[cii - 1].nombre,
           mensajes: {
             //alerts: faker.datatype.number({ min: 0, max: 50 }),
             enfermos: faker.datatype.number({ min: 0, max: 10 }),
@@ -697,6 +737,8 @@ const generateFullData = async (nb, nf, nc, np) => {
           feriados
         )
 
+        niveles[cii - 1].sala = classroom
+
         classroom.estructura.muros.cielo.soleado = fi < nf ? false : true
         classroom.estructura.muros.cielo.condicion =
           fi < nf ? "al interior" : "al exterior"
@@ -740,6 +782,8 @@ const generateFullData = async (nb, nf, nc, np) => {
           diasLaborables,
           classroom.estudiantes.length
         )
+        niveles[cii - 1].profesorJefe = teacher
+        niveles[cii - 1].alumnos = classroom.estudiantes
       }
       piso.estado = getNestedConfort(piso.salas)
       piso.results = getNestedResults(piso.salas)
@@ -751,7 +795,20 @@ const generateFullData = async (nb, nf, nc, np) => {
   }
   school.results = getNestedResults(school.edificios)
   school.estado = getNestedConfort(school.edificios)
-  return { school, students, teachers, classrooms, alerts }
+
+  for (let i = 0; i < nivelesPosibles.length; i++) {
+    let nivel = nivelesPosibles[i]
+    let nivelConfort = school.estado[nivel]
+  }
+
+  return {
+    school,
+    students,
+    teachers,
+    classrooms,
+    alerts,
+    niveles: nivelesPosibles,
+  }
 }
 
 export default generateFullData

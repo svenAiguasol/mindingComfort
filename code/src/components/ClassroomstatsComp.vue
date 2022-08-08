@@ -10,13 +10,13 @@
         <ExclamationCircleIcon class="text-white h-7" />
         <template #content>
           <div class="popupbox">
-            Cantidad de alertas críticas acumuladas hasta el momento
+            Cantidad de alertas críticas de los últimos 5 días
           </div>
         </template>
       </Popper>
     </div>
     <div class="bg-white w-10 h-full flex justify-center items-center p-1">
-      {{ stats.alerts }}
+      {{ data.mensajes.alerts }}
     </div>
     <Popper
       hover
@@ -24,21 +24,77 @@
       closeDelay="100"
       style="border: none; margin: 0, padding:0"
     >
-      <div class="bg-slate-400 h-full flex justify-center items-center p-1">
+      <div class="h-10 w-10 p-0 flex justify-center items-center">
+        <div
+          class="h-10 w-10 border-2 border-green-500 p-3 rounded-full bg-white text-sm flex justify-center items-center"
+        >
+          {{
+            formatNumber(
+              data.results.presente.salud[new Date().getMonth() - 1],
+              0
+            )
+          }}%
+        </div>
+      </div>
+      <template #content>
+        <div class="popupbox">Presencia escolar de este mes</div>
+      </template>
+    </Popper>
+    <Popper
+      hover
+      openDelay="200"
+      closeDelay="100"
+      style="border: none; margin: 0, padding:0"
+    >
+      <div class="h-10 w-10 p-0 flex justify-center items-center">
+        <div
+          class="h-10 w-10 border-2 border-violet-500 rounded-full bg-white text-sm flex justify-center items-center"
+        >
+          {{
+            formatNumber(
+              data.results.presente.notas[new Date().getMonth() - 1],
+              1
+            )
+          }}
+        </div>
+      </div>
+      <template #content>
+        <div class="popupbox">Resultados académicos de este mes</div>
+      </template>
+    </Popper>
+    <Popper
+      hover
+      openDelay="200"
+      closeDelay="100"
+      style="border: none; margin: 0, padding:0"
+    >
+      <div class="h-10 w-10 p-0 flex justify-center items-center">
+        <div
+          class="h-10 w-10 border-2 border-sky-500 rounded-full bg-white text-sm flex justify-center items-center"
+        >
+          {{
+            formatNumber(
+              data.results.presente.mental[new Date().getMonth() - 1],
+              1
+            )
+          }}
+        </div>
+      </div>
+      <template #content>
+        <div class="popupbox">Salud mental de este mes</div>
+      </template>
+    </Popper>
+
+    <!--<div class="bg-slate-400 h-full flex justify-center items-center p-1">
         <UserIcon class="text-white h-7" />
         <div class="h-5 w-5 overflow-hidden relative mr-1">
           <div class="h-5 w-5 flex justify-center items-center">
             <PlusIcon class="text-white h-20 absolute" />
           </div>
         </div>
-      </div>
-      <template #content>
-        <div class="popupbox">
-          Cantidad de alumnos enfermos acumulados durante el ciclo escolar
-        </div>
-      </template>
-    </Popper>
-    <div class="bg-white w-10 h-full flex justify-center items-center p-1">
+      </div>-->
+
+    <!--<div class="bg-white w-10 h-full flex justify-center items-center p-1">
       {{ stats.enfermos }}
     </div>
     <Popper
@@ -83,7 +139,7 @@
     </Popper>
     <div class="bg-white w-10 h-full flex justify-center items-center p-1">
       {{ stats.notas }}
-    </div>
+    </div>-->
   </div>
 </template>
 <script setup>
@@ -100,6 +156,10 @@ import {
   BadgeCheckIcon,
 } from "@heroicons/vue/solid"
 
-const props = defineProps(["stats"])
-const stats = props.stats
+const props = defineProps(["data"])
+const data = props.data
+
+function formatNumber(n, d) {
+  return n.toFixed(d).toString().replace(".", ",")
+}
 </script>

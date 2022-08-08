@@ -46,7 +46,34 @@
             Agregar edificio
           </div>
         </div>
-        <div class="mt-5 w-full pt-5 px-10 flex flex-wrap justify-center">
+        <div class="flex justify-center mt-5">
+          <h3>Tipo de confort mostrado por las barras:</h3>
+        </div>
+        <div class="flex justify-center mt-5">
+          <div
+            class="w-20 h-20 rounded-full flex justify-center items-center cursor-pointer"
+            v-for="(confort_type, i) in confort_types"
+            :key="i"
+            :value="confort_type"
+            @click="confort_select = confort_type"
+            :style="
+              confort_select == confort_type
+                ? 'background-color: #00bcd4;'
+                : '#ccc'
+            "
+          >
+            <img
+              class="h-10 w-10 fill-white"
+              :src="
+                confort_select == confort_type
+                  ? iconos_activos[confort_type]
+                  : iconos[confort_type]
+              "
+              alt=""
+            />
+          </div>
+        </div>
+        <div class="w-full pt-5 px-10 flex flex-wrap justify-center">
           <div
             v-for="(building, i) in orderSpaces(
               filterInfrastructure(infra, search)
@@ -56,7 +83,7 @@
           >
             <div
               v-if="!display_classrooms"
-              class="bg-white w-full shadow-xl flex rounded-2xl h-10 mt-5"
+              class="bg-slate-200 w-full shadow-xl flex rounded-2xl h-10 mt-5"
             >
               <div class="h-full w-20 rounded-l-2xl bg-gray-400 p-1">
                 <img
@@ -112,7 +139,7 @@
               >
                 <div
                   v-if="!display_classrooms"
-                  class="bg-white w-full shadow-xl mt-2 flex rounded-2xl h-10"
+                  class="bg-slate-100 w-full shadow-xl mt-2 flex rounded-2xl h-10"
                 >
                   <div class="h-full rounded-l-2xl bg-gray-400 p-3 w-20">
                     <img
@@ -176,9 +203,9 @@
                         />
                       </div>
                       <div
-                        class="w-40 flex justify-left ml-5 items-center cursor-pointer"
+                        class="w-64 flex justify-left ml-2 items-center cursor-pointer"
                       >
-                        {{ classroom.nombre }}
+                        {{ classroom.nombre }} - {{ classroom.curso }}
                         <div
                           class="rounded-full h-3 w-3 ml-2"
                           :style="{
@@ -188,14 +215,51 @@
                           }"
                         ></div>
                       </div>
-                      <div class="mr-20 w-60 flex justify-center items-center">
+                      <div class="mr-5 w-60 flex justify-center items-center">
                         <comfort-bar
                           :data="classroom.estado[confort_select]"
                         ></comfort-bar>
                       </div>
-                      <ClassroomstatsComp
-                        :stats="classroom.mensajes"
-                      ></ClassroomstatsComp>
+                      <div
+                        class="ml-3 flex flex-grow justify-center items-center mr-10"
+                        v-if="confort_select != 'general'"
+                      >
+                        {{
+                          formatNumber(
+                            classroom.series[
+                              confort_select == "calor" ||
+                              confort_select == "frio"
+                                ? "temperatura"
+                                : confort_select
+                            ].at(-1),
+                            1
+                          )
+                        }}
+                        {{ unidades[confort_select] }}
+                        <div
+                          class="h-7 w-10 ml-3 rounded-full bg-slate-300 flex justify-center items-baseline"
+                        >
+                          <UserIcon
+                            class="h-7"
+                            :style="{
+                              color: getColorFromScore(
+                                confort_select,
+                                classroom.series[
+                                  confort_select == 'calor' ||
+                                  confort_select == 'frio'
+                                    ? 'temperatura'
+                                    : confort_select
+                                ].at(-1)
+                              ),
+                            }"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <ClassroomstatsComp
+                          :data="classroom"
+                        ></ClassroomstatsComp>
+                      </div>
                       <div class="grow flex justify-center items-center"></div>
                       <router-link
                         class="w-24 bg-teal-500 hover:bg-teal-400 text-white rounded-r-full flex justify-center items-center cursor-pointer"
@@ -256,11 +320,12 @@ import {
   ChevronDownIcon,
   SearchIcon,
   PencilAltIcon,
+  UserIcon,
 } from "@heroicons/vue/solid"
 
 //TODO: Hacer una funcion que ordene por confort y que me devuelva el array ordenado
 const data = inject("data")
-console.log(data)
+const limitValues = inject("limitValues")
 
 const search = ref("")
 const selectedStructure = ref()
@@ -299,6 +364,42 @@ function orderClassrooms(classrooms) {
     })
   } else {
     return classrooms
+  }
+}
+
+function getColorFromScore(confortType, value) {
+  const colors = ["#8CC63F", "#FAEC21", "#F5911E", "#BF272D"]
+  /* 
+    const limitValues = {
+    calor: [24, 27, 30],
+    frio: [18, 16, 14],
+    humedad: [60, 75, 90],
+    co2: [1000, 1500, 2000],
+    ruido: [40, 50, 60],
+  }
+  */
+  if (confortType == "frio") {
+    if (value < limitValues.frio[2]) {
+      return colors[3]
+    }
+    if (value < limitValues.frio[1]) {
+      return colors[2]
+    }
+    if (value < limitValues.frio[0]) {
+      return colors[1]
+    }
+    return colors[0]
+  } else {
+    if (value > limitValues[confortType][2]) {
+      return colors[3]
+    }
+    if (value > limitValues[confortType][1]) {
+      return colors[2]
+    }
+    if (value > limitValues[confortType][0]) {
+      return colors[1]
+    }
+    return colors[0]
   }
 }
 
@@ -368,6 +469,21 @@ const iconos = ref({
     .href,
   ruido: new URL("../assets/img/icono_ruido_gris.svg", import.meta.url).href,
 })
+const iconos_activos = ref({
+  general: new URL("../assets/img/icono_silla.svg", import.meta.url).href,
+  frio: new URL("../assets/img/icono_frio.svg", import.meta.url).href,
+  calor: new URL("../assets/img/icono_calor.svg", import.meta.url).href,
+  co2: new URL("../assets/img/icono_co2.svg", import.meta.url).href,
+  humedad: new URL("../assets/img/icono_humedad.svg", import.meta.url).href,
+  ruido: new URL("../assets/img/icono_ruido.svg", import.meta.url).href,
+})
+const unidades = ref({
+  calor: "°C",
+  frio: "°C",
+  co2: "ppm",
+  humedad: "%",
+  ruido: "db",
+})
 
 const infra = ref(data.school.edificios)
 const salas = ref([])
@@ -392,5 +508,11 @@ if (router.params.idSala) {
   selectedStructure.value = salas.value.filter((sala) => {
     return sala.id == router.params.idSala
   })[0]
+}
+
+function formatNumber(value, decimales) {
+  if (value) {
+    return String(value.toFixed(decimales)).replace(".", ",")
+  }
 }
 </script>

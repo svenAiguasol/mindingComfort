@@ -22,7 +22,7 @@
         <ResultsComp :data="sala.results"></ResultsComp>
       </div>
 
-      <div class="w-full p-10" v-if="activeSection == 'Datos iniciales'">
+      <div class="w-full p-10" v-if="activeSection == 'Levantamiento'">
         <!--<h2 class="text-2xl mb-10">Infraestructura</h2>-->
         <div class="flex text-xl">
           Orientacion respecto al norte: {{ sala.estructura.orientacion }}°
@@ -140,28 +140,380 @@
           </table>
         </div>
       </div>
+
+      <div class="w-full p-10" v-if="activeSection == 'Horario'">
+        <h3 class="text-2xl mb-10">Horario de uso de la sala</h3>
+        <div class="grid grid-cols-8 gap-x-1">
+          <div class="pt-[40px] border-r">
+            <h4></h4>
+            <div style="height: 25px" v-for="i in 32" :key="i">
+              {{ getTime(i) }}
+            </div>
+          </div>
+          <div
+            class="relative border-l px-1"
+            v-for="(wd, d) in diasSemana"
+            :key="d"
+          >
+            <h4 class="w-full border-b">{{ wd }}</h4>
+            <div
+              class="bg-lime-200 absolute w-full flex justify-center items-center"
+              v-for="(block, i) in getBlocks(sala.horario[d])"
+              :key="i"
+              :style="{
+                top: block.hi * 12.5 - 175 + 'px',
+                height: block.d * 12.5 + 'px',
+              }"
+            >
+              <CheckCircleIcon class="h-10 w-10" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full p-10" v-if="activeSection == 'Mediciones'">
+        <div class="w-full h-14 m-3 flex justify-center items-center">
+          <div
+            class="bg-white flex justify-center items-center mx-10 shadow-md w-40 h-10 rounded-full border-2 border-sky-500 hover:bg-sky-500 hover:text-white cursor-pointer"
+            @click="dimTemp = 'anyo'"
+            :class="{
+              'bg-sky-500': dimTemp == 'anyo',
+              'text-white': dimTemp == 'anyo',
+            }"
+          >
+            Año
+          </div>
+          <div
+            class="bg-white flex justify-center items-center mx-10 shadow-md w-40 h-10 rounded-full border-2 border-sky-500 hover:bg-sky-500 hover:text-white cursor-pointer"
+            @click="dimTemp = 'semana'"
+            :class="{
+              'bg-sky-500': dimTemp == 'semana',
+              'text-white': dimTemp == 'semana',
+            }"
+          >
+            Semana
+          </div>
+          <div
+            class="bg-white flex justify-center items-center mx-10 shadow-md w-40 h-10 rounded-full border-2 border-sky-500 hover:bg-sky-500 hover:text-white cursor-pointer"
+            @click="dimTemp = 'dia'"
+            :class="{
+              'bg-sky-500': dimTemp == 'dia',
+              'text-white': dimTemp == 'dia',
+            }"
+          >
+            Día
+          </div>
+        </div>
+        <div class="w-full h-10 my-3 flex justify-center items-center">
+          <div class="mr-3 h-full">
+            <ChevronDoubleLeftIcon
+              @click="movefirstMoment(-1)"
+              class="h-full text-slate-700 cursor-pointer"
+            />
+          </div>
+          <div class="h-full flex items-center justify-center">
+            {{ getTimeName(dimTemp, firstMoment) }}
+          </div>
+          <div class="ml-3 h-full">
+            <ChevronDoubleRightIcon
+              @click="movefirstMoment(1)"
+              class="h-full text-slate-700 cursor-pointer"
+            />
+          </div>
+        </div>
+        <div class="h-60 flex justify-start items-start">
+          <div class="h-3/4 p-10 w-1/5">
+            <img
+              src="@/assets/img/icono_sensor_calor.svg"
+              class="h-full"
+              alt=""
+            />
+            <div
+              class="flex h-1/4 justify-center items-center mt-5 border-2 border-sky-500 rounded-full p-3"
+            >
+              {{ sala.series.temperatura.at(-1).toFixed(2).replace(".", ",") }}
+              °C
+            </div>
+          </div>
+          <div class="h-full w-4/5">
+            <SeriesChart
+              :seriesData="sala.series.temperatura"
+              :timeData="sala.series.tiempo"
+              :color="'#000'"
+              :decimales="1"
+              :unidad="'°C'"
+              :ventana="dimTemp"
+              :firstMoment="firstMoment"
+              :yRange="[0, 40]"
+              :confortBands="[
+                {
+                  color: colors[0],
+                  lineColor: lineColors[0],
+                  range: [limitValues.frio[0], limitValues.calor[0]],
+                },
+                {
+                  color: colors[1],
+                  lineColor: lineColors[1],
+                  range: [limitValues.frio[1], limitValues.frio[0]],
+                },
+                {
+                  color: colors[2],
+                  lineColor: lineColors[2],
+                  range: [limitValues.frio[2], limitValues.frio[1]],
+                },
+                {
+                  color: colors[3],
+                  lineColor: lineColors[3],
+                  range: [-20, limitValues.frio[2]],
+                },
+                {
+                  color: colors[1],
+                  lineColor: lineColors[1],
+                  range: [limitValues.calor[0], limitValues.calor[1]],
+                },
+                {
+                  color: colors[2],
+                  lineColor: lineColors[2],
+                  range: [limitValues.calor[1], limitValues.calor[2]],
+                },
+                {
+                  color: colors[3],
+                  lineColor: lineColors[3],
+                  range: [limitValues.calor[2], 100],
+                },
+              ]"
+            ></SeriesChart>
+          </div>
+        </div>
+        <div class="h-60 flex justify-start items-start">
+          <div class="h-3/4 p-10 w-1/5">
+            <img
+              src="@/assets/img/icono_sensor_humedad.svg"
+              class="h-full"
+              alt=""
+            />
+            <div
+              class="flex h-1/4 justify-center items-center mt-5 border-2 border-sky-500 rounded-full p-3"
+            >
+              {{ sala.series.humedad.at(-1).toFixed(2).replace(".", ",") }} %
+            </div>
+          </div>
+          <div class="h-full w-4/5">
+            <SeriesChart
+              :seriesData="sala.series.humedad"
+              :timeData="sala.series.tiempo"
+              :color="'#000'"
+              :decimales="1"
+              :unidad="'%'"
+              :ventana="dimTemp"
+              :firstMoment="firstMoment"
+              :yRange="[0, 100]"
+              :confortBands="[
+                {
+                  color: colors[0],
+                  lineColor: lineColors[0],
+                  range: [0, limitValues.humedad[0]],
+                },
+                {
+                  color: colors[1],
+                  lineColor: lineColors[1],
+                  range: [limitValues.humedad[0], limitValues.humedad[1]],
+                },
+                {
+                  color: colors[2],
+                  lineColor: lineColors[2],
+                  range: [limitValues.humedad[1], limitValues.humedad[2]],
+                },
+                {
+                  color: colors[3],
+                  lineColor: lineColors[3],
+                  range: [limitValues.humedad[2], 100],
+                },
+              ]"
+            ></SeriesChart>
+          </div>
+        </div>
+        <div class="h-60 flex justify-start items-start">
+          <div class="h-3/4 p-10 w-1/5">
+            <img
+              src="@/assets/img/icono_sensor_co2.svg"
+              class="h-full"
+              alt=""
+            />
+            <div
+              class="flex h-1/4 justify-center items-center mt-5 border-2 border-sky-500 rounded-full p-3"
+            >
+              {{ sala.series.co2.at(-1).toFixed(2).replace(".", ",") }}ppm
+            </div>
+          </div>
+          <div class="h-full w-4/5">
+            <SeriesChart
+              :seriesData="sala.series.co2"
+              :timeData="sala.series.tiempo"
+              :color="'#000'"
+              :decimales="1"
+              :unidad="'ppm'"
+              :ventana="dimTemp"
+              :firstMoment="firstMoment"
+              :yRange="[0, 5000]"
+              :confortBands="[
+                {
+                  color: colors[0],
+                  lineColor: lineColors[0],
+                  range: [0, limitValues.co2[0]],
+                },
+                {
+                  color: colors[1],
+                  lineColor: lineColors[1],
+                  range: [limitValues.co2[0], limitValues.co2[1]],
+                },
+                {
+                  color: colors[2],
+                  lineColor: lineColors[2],
+                  range: [limitValues.co2[1], limitValues.co2[2]],
+                },
+                {
+                  color: colors[3],
+                  lineColor: lineColors[3],
+                  range: [limitValues.co2[2], 10000],
+                },
+              ]"
+            ></SeriesChart>
+          </div>
+        </div>
+        <div class="h-60 flex justify-start items-start">
+          <div class="h-3/4 p-10 w-1/5">
+            <img
+              src="@/assets/img/icono_sensor_ruido.svg"
+              class="h-full"
+              alt=""
+            />
+            <div
+              class="flex h-1/4 justify-center items-center mt-5 border-2 border-sky-500 rounded-full p-3"
+            >
+              {{ sala.series.ruido.at(-1).toFixed(2).replace(".", ",") }} db
+            </div>
+          </div>
+          <div class="h-full w-4/5">
+            <SeriesChart
+              :seriesData="sala.series.ruido"
+              :timeData="sala.series.tiempo"
+              :color="'#000'"
+              :decimales="1"
+              :unidad="'db'"
+              :ventana="dimTemp"
+              :firstMoment="firstMoment"
+              :yRange="[0, 100]"
+              :confortBands="[
+                {
+                  color: colors[0],
+                  lineColor: lineColors[0],
+                  range: [0, limitValues.ruido[0]],
+                },
+                {
+                  color: colors[1],
+                  lineColor: lineColors[1],
+                  range: [limitValues.ruido[0], limitValues.ruido[1]],
+                },
+                {
+                  color: colors[2],
+                  lineColor: lineColors[2],
+                  range: [limitValues.ruido[1], limitValues.ruido[2]],
+                },
+                {
+                  color: colors[3],
+                  lineColor: lineColors[3],
+                  range: [limitValues.ruido[2], 100],
+                },
+              ]"
+            ></SeriesChart>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script setup>
-import { ref, inject } from "vue"
+import { ref, inject, watch, computed } from "vue"
 import ComfortBar from "./charts/ComfortBar.vue"
 import LeyendaComp from "./LeyendaComp.vue"
 import { useRoute } from "vue-router"
 import ResultsComp from "./ResultsComp.vue"
-import { PencilAltIcon } from "@heroicons/vue/solid"
+import {
+  PencilAltIcon,
+  CheckCircleIcon,
+  ChevronDoubleLeftIcon,
+  ChevronDoubleRightIcon,
+} from "@heroicons/vue/solid"
+import moment from "moment"
+import SeriesChart from "./charts/SeriesChart.vue"
+const limitValues = ref(inject("limitValues"))
+const lineColors = ["#8CC63F", "#FAEC21", "#F5911E", "#BF272D"]
+const colors = ref(["#f4ffe6", "#fffdd9", "#fff2e3", "#ffe6e7"])
+const activeSection = ref()
+activeSection.value = location.hash ? location.hash.substring(1) : "Principal"
 
-function setSection(section) {
-  this.activeSection = section
+function getBlocks(timeStrip) {
+  let blocks = []
+  let hi = 0
+  let block = { hi: 0, d: 0 }
+  for (let i = 0; i < timeStrip.length; i++) {
+    if (i == 0 && timeStrip[i] == 1) {
+      block = { hi: i, d: 0 }
+    }
+    if (i > 0) {
+      if (timeStrip[i] == 1 && timeStrip[i - 1] == 0) {
+        block = { hi: i, d: 0 }
+      }
+    }
+    if (
+      (timeStrip[i] == 1 && timeStrip[i + 1] == 0) ||
+      i == timeStrip.legth - 1
+    ) {
+      block.d = i + 1 - block.hi
+      blocks.push(block)
+    }
+  }
+  return blocks
 }
 
+function getTime(i) {
+  return moment(new Date().setHours(6, 0, 0))
+    .add(i * 30, "minute")
+    .format("HH:mm")
+}
+
+watch(activeSection, (val) => {
+  location.hash = val
+})
+
+function setSection(section) {
+  activeSection.value = section
+  location.hash = section
+}
+
+const dimTemp = ref("dia")
+
 const router = useRoute()
-const activeSection = ref(router.query.section || "Principal")
+
+const firstMoment = ref(moment(new Date().setHours(0, 0, 0)))
+
+const diasSemana = ref([
+  "Lunes",
+  "Martes",
+  "Miércoles",
+  "Jueves",
+  "Viernes",
+  "Sábado",
+  "Domingo",
+])
+
 const sections = ref([
   "Principal", //datos generales, mejoras sugeridas
-  "Personas",
-  "Datos iniciales",
+  "Mediciones",
+  "Levantamiento",
   "Mejoras",
+  "Horario",
 ])
 
 const confort_types = ref([
@@ -172,6 +524,7 @@ const confort_types = ref([
   "humedad",
   "ruido",
 ])
+
 const iconos = ref({
   general: new URL("../assets/img/icono_silla_gris.svg", import.meta.url).href,
   frio: new URL("../assets/img/icono_frio_gris.svg", import.meta.url).href,
@@ -209,5 +562,59 @@ if (auxSala.length == 1) {
   })
 }
 
-console.log(auxSala)
+watch(dimTemp, function () {
+  if (dimTemp.value == "dia") {
+    firstMoment.value = moment(new Date().setHours(0, 0, 0))
+  }
+  if (dimTemp.value == "semana") {
+    firstMoment.value = moment(new Date()).subtract(1, "weeks")
+  }
+  if (dimTemp.value == "anyo") {
+    firstMoment.value = moment(new Date()).subtract(1, "years")
+  }
+})
+
+const timeDict = {
+  dia: "days",
+  semana: "weeks",
+  anyo: "years",
+}
+
+function movefirstMoment(quantity) {
+  firstMoment.value = firstMoment.value
+    .clone()
+    .add(quantity, timeDict[dimTemp.value])
+}
+
+function getTimeName(dimTemp, firstMoment) {
+  switch (dimTemp) {
+    case "dia":
+      if (moment(new Date()).diff(firstMoment, "days") == 0) {
+        return "Hoy"
+      }
+      if (moment(new Date()).diff(firstMoment, "days") == 1) {
+        return "Ayer"
+      }
+      return "Hace " + moment(new Date()).diff(firstMoment, "days") + " días"
+    case "semana":
+      if (moment(new Date()).diff(firstMoment, "weeks") == 0) {
+        console.log(moment(new Date()).diff(firstMoment, "weeks"))
+        return "Esta semana"
+      }
+      if (moment(new Date()).diff(firstMoment, "weeks") == 1) {
+        return "Semana pasada"
+      }
+      return (
+        "Hace " + moment(new Date()).diff(firstMoment, "weeks") + " semanas"
+      )
+    case "anyo":
+      if (moment(new Date()).diff(firstMoment, "years") == 0) {
+        return "Este año"
+      }
+      if (moment(new Date()).diff(firstMoment, "years") == -1) {
+        return "Año pasado"
+      }
+      return "Hace " + moment(new Date()).diff(firstMoment, "years") + " años"
+  }
+}
 </script>
