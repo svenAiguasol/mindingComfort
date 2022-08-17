@@ -57,7 +57,7 @@ function login() {
   }
   if (form.value.user == "demo" && form.value.pass == "demo") {
     localStorage.setItem("token", "demo")
-    router.push("/plataforma")
+    location.href = "plataforma/dashboard"
   }
 }
 </script>

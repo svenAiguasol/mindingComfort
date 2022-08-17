@@ -17,15 +17,20 @@
   </div>
 </template>
 <script setup>
-import { computed, ref } from "vue"
+import { computed, ref, watch } from "vue"
 
 const props = defineProps(["modelValue", "label"])
 const emit = defineEmits(["update:modelValue"])
-const label = ref(props.label)
-const vari = ref(props.var)
+const label = ref(props.label ? props.label : "")
+const vari = ref(props.modelValue)
+
+watch(props, function (newVal) {
+  vari.value = newVal.modelValue
+})
+
 function click(e) {
-  console.log(vari.value)
   vari.value = !vari.value
+  //console.log(vari.value)
   emit("update:modelValue", vari.value)
 }
 </script>

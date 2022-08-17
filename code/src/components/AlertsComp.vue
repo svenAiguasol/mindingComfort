@@ -1,10 +1,9 @@
 <template>
   <div>
-    <h3 class="font-ailerons text-4xl text-left">Alertas</h3>
     <div
-      v-for="(alert, i) in data"
+      v-for="(alert, i) in data.slice(0, alertsNumber)"
       :key="i"
-      class="mt-10 mb-10 flex justify-center w-full"
+      class="mt-5 mb-5 flex justify-center w-full"
     >
       <div class="rounded-lg h-8 flex mr-5">
         <div
@@ -20,7 +19,7 @@
         <div class="flex h-8 w-20 bg-slate-300 justify-center items-center">
           {{ alert.idSala }}
         </div>
-        <div class="flex w-20 bg-white justify-center items-center p-2">
+        <div class="flex w-32 bg-white justify-center items-center p-2">
           {{ formatDate(alert.tiempo) }} --
         </div>
         <div
@@ -34,11 +33,13 @@
       </div>
     </div>
     <div class="flex justify-center items-center">
-      <button
+      <router-link
         class="bg-white border-2 border-sky-500 text-sky-500 hover:bg-sky-500 hover:text-white rounded-full p-2 px-10"
+        v-if="data.length > alertsNumber"
+        :to="'/plataforma/alertas'"
       >
         Ver todas
-      </button>
+      </router-link>
     </div>
   </div>
 </template>
@@ -51,15 +52,16 @@ import {
 } from "@heroicons/vue/solid"
 import moment from "moment"
 
-const props = defineProps(["data"])
+const props = defineProps(["data", "alertsNumber"])
 
-const data = ref(props.data[0])
+const data = ref(props.data)
+const alertsNumber = ref(props.alertsNumber)
 
-console.log(props.data)
+//console.log(props.data)
 
 function formatDate(value) {
   if (value) {
-    return moment(String(value)).format("hh:mm")
+    return moment(String(value)).format("DD/MM hh:mm")
   }
 }
 
@@ -68,14 +70,6 @@ function formatNumber(value, decimales) {
     return String(value.toFixed(decimales)).replace(".", ",")
   }
 }
-
-const alerts = ref([
-  { sala: "A101", type: "calor", reading: 38.3, time: new Date() },
-  { sala: "A201", type: "calor", reading: 37.5, time: new Date() },
-  { sala: "A101", type: "co2", reading: 4001, time: new Date() },
-  { sala: "A201", type: "co2", reading: 3677, time: new Date() },
-  { sala: "A201", type: "humedad", reading: 99, time: new Date() },
-])
 
 const criticStats = ref({
   calor: {

@@ -1,8 +1,67 @@
 <template>
-  <div>
+  <div class="relative">
+    <div
+      v-if="activeMejora"
+      class="bg-slate-100 fixed w-1/4 h-screen z-50 right-0 top-0 overflow-y-scroll"
+    >
+      <div class="w-full h-full relative p-10">
+        <div class="absolute top-5 right-5">
+          <XCircleIcon
+            class="text-slate-400 h-14 w-14 cursor-pointer"
+            @click="activeMejora = null"
+          />
+        </div>
+        <div class="flex flex-wrap w-full justify-center">
+          <h3 class="text-2xl w-full mb-10">{{ activeMejora.nombre }}</h3>
+          <div class="bg-white h-24 w-24 rounded-full p-3">
+            <img :src="activeMejora.icono" class="w-full" alt="" />
+          </div>
+          <p class="text-justify text-sm mt-10">
+            {{ activeMejora.descripcion }}
+          </p>
+          <h3
+            class="w-full mb-3 mt-3"
+            v-if="activeMejora.advertencias[0] != ''"
+          >
+            Advertencias
+          </h3>
+          <div v-if="activeMejora.advertencias[0] != ''">
+            <ul class="w-full list-disc">
+              <li
+                class="text-left text-sm"
+                v-for="(adv, i) in activeMejora.advertencias"
+                :key="i"
+              >
+                {{ adv }}
+              </li>
+            </ul>
+          </div>
+          <h3 class="w-full mb-3 mt-3">Recomendaciones</h3>
+          <ul class="list-disc">
+            <li
+              class="w-full text-left text-sm"
+              v-for="(rec, i) in activeMejora.recomendaciones"
+              :key="i"
+            >
+              {{ rec }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
     <div class="h-min-screen w-full">
       <h3 class="font-ailerons text-4xl bg-white text-left flex">
-        {{ sala.nombre }} <PencilAltIcon class="text-sky-500 h-10 ml-5" />
+        {{ sala.nombre }}
+        <PencilAltIcon
+          @click="
+            emitter.emit('addAlert', {
+              type: 'success',
+              txt: 'isDemo',
+            })
+          "
+          class="text-sky-500 h-10 ml-5 cursor-pointer"
+        />
       </h3>
       <div
         class="mt-5 w-full border-b-2 h-12 border-gray-400 flex justify-start items-baseline"
@@ -32,7 +91,7 @@
         <div class="flex">
           <table class="min-w-full">
             <thead class="border-b">
-              <tr>
+              <tr class="bg-teal-500 h-10">
                 <th style="font-family: CooperHewittTitle">Orientación</th>
                 <th style="font-family: CooperHewittTitle">Longitud</th>
                 <th style="font-family: CooperHewittTitle">Alto</th>
@@ -52,7 +111,9 @@
             </thead>
             <tbody>
               <tr v-for="(ori, index) in sala.estructura.muros" :key="index">
-                <td style="font-family: CooperHewittTitle">{{ index }}</td>
+                <td style="font-family: CooperHewittTitle" class="bg-teal-300">
+                  {{ index }}
+                </td>
                 <td>{{ ori.largo }} m</td>
                 <td>{{ ori.alto }} m</td>
                 <td>{{ ori.solucion }}</td>
@@ -69,7 +130,7 @@
         <div class="flex flex-wrap">
           <table class="min-w-full">
             <thead class="border-b">
-              <tr>
+              <tr class="bg-teal-500 h-10">
                 <th style="font-family: CooperHewittTitle">Tecnología</th>
                 <th style="font-family: CooperHewittTitle">Tiene</th>
                 <th style="font-family: CooperHewittTitle">Tipo</th>
@@ -80,7 +141,9 @@
             </thead>
             <tbody>
               <tr>
-                <td>Aire acondicionado</td>
+                <td class="bg-teal-300" style="font-family: CooperHewittTitle">
+                  Aire acondicionado
+                </td>
                 <td>
                   {{
                     sala.datosIniciales.aireAcondicionado.estado ? "Sí" : "No"
@@ -92,7 +155,9 @@
                 <td>{{ sala.datosIniciales.aireAcondicionado.potencia }}</td>
               </tr>
               <tr>
-                <td>Calefacción</td>
+                <td class="bg-teal-300" style="font-family: CooperHewittTitle">
+                  Calefacción
+                </td>
                 <td>
                   {{ sala.datosIniciales.calefaccion.estado ? "Sí" : "No" }}
                 </td>
@@ -104,11 +169,23 @@
             </tbody>
           </table>
           <table class="min-w-full mt-10">
+            <thead>
+              <tr class="bg-teal-500 h-10">
+                <th></th>
+                <th style="font-family: CooperHewittTitle">Tipo</th>
+                <th style="font-family: CooperHewittTitle">Cantidad</th>
+              </tr>
+            </thead>
             <tbody>
               <tr>
-                <td style="font-family: CooperHewittTitle">Tipo luminaria</td>
+                <td style="font-family: CooperHewittTitle" class="bg-teal-300">
+                  Luminaria
+                </td>
                 <td>
-                  {{ sala.datosIniciales.luminaria }}
+                  {{ sala.datosIniciales.luminaria.tipo }}
+                </td>
+                <td>
+                  {{ sala.datosIniciales.luminaria.cantidad }}
                 </td>
               </tr>
             </tbody>
@@ -118,26 +195,68 @@
         <div class="flex">
           <table class="min-w-full">
             <thead class="border-b">
-              <tr>
+              <tr class="bg-teal-500">
                 <th style="font-family: CooperHewittTitle">Tipo de medición</th>
                 <th style="font-family: CooperHewittTitle">Medición</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Iluminación en pizarra</td>
+                <td class="bg-teal-300" style="font-family: CooperHewittTitle">
+                  Iluminación en pizarra
+                </td>
                 <td>{{ sala.datosIniciales.iluminacionPizarra }} Lx</td>
               </tr>
               <tr>
-                <td>Iluminación en plano de trabajo</td>
+                <td class="bg-teal-300" style="font-family: CooperHewittTitle">
+                  Iluminación en plano de trabajo
+                </td>
                 <td>{{ sala.datosIniciales.iluminacionPlano }} Lx</td>
               </tr>
               <tr>
-                <td>Inteligibilidad</td>
+                <td class="bg-teal-300" style="font-family: CooperHewittTitle">
+                  Inteligibilidad
+                </td>
                 <td>{{ sala.datosIniciales.inteligibilidad }} %</td>
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <div class="w-full p-10" v-if="activeSection == 'Mejoras'">
+        <h3 class="text-2xl mb-10">Problemas detectados</h3>
+        <div v-for="problemaID in sala.problemas" :key="problemaID">
+          <div
+            class="w-full bg-slate-500 text-white flex h-10 justify-start items-center shadow-md mb-3 p-5"
+          >
+            <div class="w-30">
+              {{ problemas.find((p) => p.id == problemaID).nombre }}
+            </div>
+          </div>
+          <div class="text-justify px-10 mb-5">
+            <h3 class="mt-10">Porqué es un problema</h3>
+            {{ problemas.find((p) => p.id == problemaID).descripcion }}
+            <h3 class="mt-10 mb-3">Soluciones posibles</h3>
+            <div class="w-full flex justify-start">
+              <div
+                class="bg-sky-600 ml-3 text-white h-14 rounded-full flex justify-center items-center cursor-pointer"
+                style="width: 30%"
+                v-for="(mejoraID, i) in problemas.find(
+                  (p) => p.id == problemaID
+                ).mejoras"
+                :key="i"
+                @click="activeMejora = mejoras.find((x) => x.id == mejoraID)"
+              >
+                <img
+                  :src="mejoras.find((x) => x.id == mejoraID).icono"
+                  class="h-12 mr-3"
+                  alt=""
+                />
+                {{ mejoras.find((x) => x.id == mejoraID).nombre }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -161,7 +280,7 @@
               v-for="(block, i) in getBlocks(sala.horario[d])"
               :key="i"
               :style="{
-                top: block.hi * 12.5 - 175 + 'px',
+                top: block.hi * 12.5 - 212.5 + 'px',
                 height: block.d * 12.5 + 'px',
               }"
             >
@@ -245,6 +364,7 @@
               :ventana="dimTemp"
               :firstMoment="firstMoment"
               :yRange="[0, 40]"
+              :bloquesHorarios="sala.tiempoUso"
               :confortBands="[
                 {
                   color: colors[0],
@@ -308,6 +428,7 @@
               :ventana="dimTemp"
               :firstMoment="firstMoment"
               :yRange="[0, 100]"
+              :bloquesHorarios="sala.tiempoUso"
               :confortBands="[
                 {
                   color: colors[0],
@@ -356,6 +477,7 @@
               :ventana="dimTemp"
               :firstMoment="firstMoment"
               :yRange="[0, 5000]"
+              :bloquesHorarios="sala.tiempoUso"
               :confortBands="[
                 {
                   color: colors[0],
@@ -404,6 +526,7 @@
               :ventana="dimTemp"
               :firstMoment="firstMoment"
               :yRange="[0, 100]"
+              :bloquesHorarios="sala.tiempoUso"
               :confortBands="[
                 {
                   color: colors[0],
@@ -444,6 +567,7 @@ import {
   CheckCircleIcon,
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
+  XCircleIcon,
 } from "@heroicons/vue/solid"
 import moment from "moment"
 import SeriesChart from "./charts/SeriesChart.vue"
@@ -476,6 +600,8 @@ function getBlocks(timeStrip) {
   }
   return blocks
 }
+
+const activeMejora = ref()
 
 function getTime(i) {
   return moment(new Date().setHours(6, 0, 0))
@@ -510,9 +636,9 @@ const diasSemana = ref([
 
 const sections = ref([
   "Principal", //datos generales, mejoras sugeridas
+  "Mejoras",
   "Mediciones",
   "Levantamiento",
-  "Mejoras",
   "Horario",
 ])
 
@@ -539,6 +665,11 @@ const sala = ref()
 const data = inject("data")
 const history = inject("router")
 const emitter = inject("emitter")
+
+const problemas = ref(data.problemas)
+const mejoras = ref(data.mejoras)
+
+console.log(data)
 
 if (!router.params.idSala) {
   history.go("/plataforma/salas/")
@@ -567,10 +698,10 @@ watch(dimTemp, function () {
     firstMoment.value = moment(new Date().setHours(0, 0, 0))
   }
   if (dimTemp.value == "semana") {
-    firstMoment.value = moment(new Date()).subtract(1, "weeks")
+    firstMoment.value = moment(new Date()).startOf("week")
   }
   if (dimTemp.value == "anyo") {
-    firstMoment.value = moment(new Date()).subtract(1, "years")
+    firstMoment.value = moment(new Date(new Date().getFullYear(), 0, 0))
   }
 })
 
@@ -598,7 +729,7 @@ function getTimeName(dimTemp, firstMoment) {
       return "Hace " + moment(new Date()).diff(firstMoment, "days") + " días"
     case "semana":
       if (moment(new Date()).diff(firstMoment, "weeks") == 0) {
-        console.log(moment(new Date()).diff(firstMoment, "weeks"))
+        //console.log(moment(new Date()).diff(firstMoment, "weeks"))
         return "Esta semana"
       }
       if (moment(new Date()).diff(firstMoment, "weeks") == 1) {

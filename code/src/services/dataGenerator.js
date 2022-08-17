@@ -60,9 +60,15 @@ function generateRandomConforts() {
 
 async function getFeriados() {
   const currentYear = moment(new Date()).year()
-  const fechasJson = await fetchAsync(
-    `https://apis.digital.gob.cl/fl/feriados/${currentYear}`
-  )
+  let fechasJson
+  try {
+    fechasJson = await fetchAsync(
+      `https://apis.digital.gob.cl/fl/feriados/${currentYear}`
+    )
+  } catch (e) {
+    fechasJson = []
+    //console.log(e)
+  }
   let feriados = []
   await Promise.all(
     fechasJson.map((fecha) => {
@@ -71,6 +77,18 @@ async function getFeriados() {
   )
   //console.log(feriados)
   return feriados
+}
+
+function getVacacionesInvierno() {
+  const fromDate = moment(new Date(new Date().getFullYear(), 6, 1)).startOf(
+    "week"
+  )
+  const toDate = fromDate.clone().add(2, "weeks")
+  let vacaciones = []
+  for (let dia = fromDate; dia.isBefore(toDate); dia.add(1, "days")) {
+    vacaciones.push(dia.format("MM-DD"))
+  }
+  return vacaciones
 }
 
 function generateRandomSeries(horario, ventNat, fecha, feriados) {
@@ -87,7 +105,7 @@ function generateRandomSeries(horario, ventNat, fecha, feriados) {
   ds = ds === 0 ? 6 : ds - 1 // nuestro 0 es monday
 
   //console.log(feriados)
-  const inicioClases = new Date(new Date().getFullYear(), 3, 1)
+  const inicioClases = new Date(new Date().getFullYear(), 2, 1)
 
   const Tmin = [
     16.9, 14.95442271, 14.65378886, 13.703468073, 8.469565143, 4.765463221,
@@ -110,6 +128,7 @@ function generateRandomSeries(horario, ventNat, fecha, feriados) {
   var ti = new Date(new Date().getFullYear(), 0, 1, 0, 0, 0, 0)
   let t
   let i = 0
+  let tiempoUso = []
   for (let m = 0; m < 11; m++) {
     const dm = diasMes[m]
     const deltaT = Tmax[m] - Tmin[m]
@@ -118,26 +137,25 @@ function generateRandomSeries(horario, ventNat, fecha, feriados) {
       for (let h = 0; h < 24; h++) {
         for (let qm = 0; qm < divisionesHorarias; qm++) {
           if (t >= fecha) {
-            return series
+            return { series, tiempoUso }
           }
           t = new Date(ti.getTime() + (i * 1000 * 3600) / divisionesHorarias)
           series.tiempo.push(moment(t).format("YYYY-MM-DD HH:mm"))
-          //console.log(t)
-          //console.log(t < inicioClases)
+
           const temperaturaBasal =
             Tmin[m] +
             Math.sin((qmi * Math.PI) / (divisionesHorarias * 24)) * deltaT +
             faker.datatype.number({ min: -1, max: 1, precision: 0.1 })
           const mesdia =
             zeroPad(t.getMonth() + 1, 2) + "-" + zeroPad(t.getDate(), 2)
-          //console.log(mesdia)
-          //console.log(feriados.indexOf(mesdia))
+          //console.log(qmi)
           if (
             horario[ds][qmi] === 0 ||
             feriados.indexOf(mesdia) != -1 ||
             t < inicioClases
           ) {
             // recreo o fuera de clases
+            tiempoUso.push(0)
             temperaturaAlumnos =
               temperaturaAlumnos > 0
                 ? ventNat
@@ -159,6 +177,7 @@ function generateRandomSeries(horario, ventNat, fecha, feriados) {
             ruido = faker.datatype.number({ min: 0, max: 20 })
           } else {
             // en clases
+            tiempoUso.push(1)
             temperaturaAlumnos =
               temperaturaAlumnos <= maxAlumnos
                 ? temperaturaAlumnos + 0.25
@@ -170,7 +189,7 @@ function generateRandomSeries(horario, ventNat, fecha, feriados) {
             humedad =
               humedad < 85
                 ? humedad + 10 + faker.datatype.number({ min: -5, max: 5 })
-                : humedad + faker.datatype.number({ min: -3, max: 3 })
+                : humedad
             ruido = faker.datatype.number({ min: 20, max: 60 })
           }
           //series.temperaturaAlumnos.push(temperaturaAlumnos)
@@ -185,8 +204,7 @@ function generateRandomSeries(horario, ventNat, fecha, feriados) {
       ds = ds == 6 ? 0 : ds + 1
     }
   }
-
-  return series
+  return { series, tiempoUso }
 }
 
 function normalDist(mean, stdDev) {
@@ -196,6 +214,22 @@ function normalDist(mean, stdDev) {
   )
 }
 
+function getProblemas(indicadores) {
+  let res = []
+  problemas.map((problema) => {
+    Object.keys(problema.criterio).map((criterio) => {
+      const valorCriterio = problema.criterio[criterio]
+      //console.log(problema.nombre, valorCriterio, indicadores[criterio])
+      if (
+        indicadores[criterio] < valorCriterio &&
+        res.indexOf(problema.id) == -1
+      ) {
+        res.push(problema.id)
+      }
+    })
+  })
+  return res
+}
 function parseAlerts(idSala, series) {
   const limitValues = {
     temperatura: [8, 28],
@@ -209,12 +243,13 @@ function parseAlerts(idSala, series) {
     co2: "",
     ruido: "",
   }
-
+  const fromDate = moment(new Date()).subtract(3, "days").toDate()
   Object.keys(limitValues).map((type) => {
     let it = 0
-    series[type].map((value) => {
-      let t = series.tiempo[it]
-      if (t >= moment(new Date()).subtract(3, "day").toDate()) {
+    const tiempoReducido = series.tiempo.slice(-500)
+    series[type].slice(-500).map((value) => {
+      let t = tiempoReducido[it]
+      if (moment(t) >= fromDate) {
         const limit = limitValues[type]
         if (value < limit[0] || value > limit[1]) {
           alerts[type] = {
@@ -244,6 +279,225 @@ const materialidades = ["hormigón", "albañilería", "tabiquería liviana"]
 const cielos = ["cielo falso", "cielo hormigón", "cielo madera"]
 const condiciones = ["al interior", "al exterior"]
 const suelos = ["baldosa", "madera", "hormigón descubierto"]
+const mejoras = [
+  {
+    id: 1,
+    nombre: "Ventilacion Natural",
+    icono: new URL(
+      "../assets/img/icono_mejora_ventilacion.svg",
+      import.meta.url
+    ).href,
+    descripcion:
+      "La apertura de puertas y ventanas, antes, durantes y después de clases ayuda a renovar el aire y por tanto mantener los niveles de humedad y CO2 debajo de los niveles recomendados",
+    advertencias: [
+      "La ventilación durante la clase en invierno puede bajar la temperatura y afectar negativamente el confort",
+      "Su uso en espacios climatizados (con calefacción o con aire acondicionado) incrementará muy significativamente el consumo de energía",
+    ],
+    recomendaciones: [
+      "Ventile las salas entre clases durante el invierno, y mantenga ventanas abiertas durante el verano",
+      "La tasa de producción de humedad y CO2 aumenta significativamente con la actividad física activa",
+    ],
+    inversion: 0,
+    operacional: 0,
+  },
+  {
+    id: 2,
+    nombre: "Ventilacion Mecánica",
+    icono: new URL("../assets/img/icono_mejora_vent_mec.svg", import.meta.url)
+      .href,
+    descripcion:
+      "La tasa de renovación de aire para mantener una sala corréctamente ventilada según estándares internacionales sólo se puede conseguir con ventilación mecánica, que es un sistema que inyecta aire fresco al interior de la sala por medio de ventilador/es.",
+    advertencias: [
+      "Estos sistemas significarán un incremento de su consumo energético, pero la energía requerida por ventilador es muy baja en comparación con la calefacción y aire acondicionado",
+    ],
+    recomendaciones: [
+      "Considere implementar sistemas centralizados, pueden significar un ahorro económico relevante en edificios con muchas salas",
+      "Si es que tiene sistemas de calefacción o aire acondicionado, considere implementar el sistema con recuperación de calor. En caso contrario, el consumo de energía se podría triplicar fácilmente.",
+      "Considere implementar sistemas con control automático en base al nivel de humedad y CO2, ya que estos mejoran el nivel de consumo de energía y entregan la cantidad de aire necesaria para mantener el confort en sus niveles óptimos",
+      "Intente que el chorro de aire no impacte nunca directamente a los alumnos mediante el uso de difusores y localizaciones adecuadas de los puntos de inyección",
+    ],
+    inversion: 4,
+    operacional: 1,
+  },
+  {
+    id: 3,
+    nombre: "Aire acondicionado",
+    icono: new URL("../assets/img/icono_mejora_ac.svg", import.meta.url).href,
+    descripcion:
+      "El aire acondicionado es una tecnología que extrae calor de la sala (unidad interior) y lo inyecta en el aire de afuera (unidad exterior). El aire acondicionado es una de las dos maneras de producir frío para climatización (Aparte de la ventilación evaporativa). La mayoría de modelos admite también la producción de calor. Hay de muchos tipos, puede ser centralizado o decentralizado, puede entregar el frío/calor a través de ductos de ventilación o a través de un evaporador/condensador interior, puede tener variación de potencia o ser de potencia constante, etc.",
+    advertencias: [
+      "Aunque estos dispositivos son energéticamente eficientes, el consumo en salas de clase con muchos alumnos, o en espacios mal aislados, puede incrementar significativaente el consumo de energía",
+      "Normalmente esta tecnología hace recircular el aire, no lo renueva, por tanto no reduce las tasas de CO2 y humedad al interior del aula",
+      "La potencia eléctrica de estos sistemas podrían exigir una ampliación de empalme para el establecimiento",
+    ],
+    recomendaciones: [
+      "Considere implementar sistemas centralizados, pueden significar un ahorro económico relevante en edificios con muchas salas",
+      "Utilice el sistema con las ventanas cerradas en todo momento. Si los niveles de CO2 y humedad aumentan, utilice un sistema de ventilación con recuperación de calor para no incrementar el consumo de energía",
+      "Nunca regule el termostato por debajo de 24 grados, ya que esto puede aumentar el consumo de energía. En lo posible, deje el control con protección, sin posibilidad de operación manual desde el aula",
+      "Limpie filtros al menos cada 6 meses y haga mantenciones recomendadas por el instalador al menos una vez por año, de esta forma los sistemas se mantendrán en condiciones óptimas",
+      "Intente que el chorro de aire no impacte nunca directamente a los alumnos mediante el uso de difusores y localizaciones adecuadas de los puntos de inyección",
+    ],
+    inversion: 5,
+    operacional: 4,
+  },
+  {
+    id: 4,
+    nombre: "Calefacción",
+    icono: new URL(
+      "../assets/img/icono_mejora_calefaccion.svg",
+      import.meta.url
+    ).href,
+    descripcion:
+      "La calefacción es un sistema que calienta el aula de clases. Existen muchas soluciones tecnológicas, tales como calefactores eléctricos, a leña, de combustibles, solar, geotérmica, entre otros. La eficiencia de cada tecnología puede ser muy variable, y los costos operativos también, por lo que instalar un sistema de calefacción usualmente es una decisión ue debe ser calculada y es una decisión estratégica relevante en el consumo de energía del establecimiento.",
+    advertencias: [
+      "La eficiencia y el costo de las fuentes de energía pueden ser muy variables y una mala decisión puede significar un incremento muy significativo del consumo de energía y de su costo",
+      "Normalmente esta tecnología hace recircular el aire, no lo renueva, por tanto no reduce las tasas de CO2 y humedad al interior del aula",
+      "La potencia eléctrica de los sistemas que funcionan con electricidad podrían exigir una ampliación de empalme para el establecimiento",
+      "Si una sala está correctamente aislada, la tasa de generación de calor podrían evitar la necesidad de un sistema de calefacción",
+    ],
+    recomendaciones: [
+      "Considere implementar sistemas centralizados, pueden significar un ahorro económico relevante en edificios con muchas salas",
+      "Utilice el sistema con las ventanas cerradas en todo momento. Si los niveles de CO2 y humedad aumentan, utilice un sistema de ventilación con recuperación de calor para no incrementar el consumo de energía",
+      "Nunca regule el termostato por encima de 21 grados, ya que esto puede aumentar el consumo de energía. En lo posible, deje el control con protección, sin posibilidad de operación manual desde el aula",
+      "Haga mantenciones recomendadas por el instalador para evitar riesgo de incendios y otros problemas",
+      "Si el sistema contempla flujos de aire, intente que el chorro de aire no impacte nunca directamente a los alumnos mediante el uso de difusores y localizaciones adecuadas de los puntos de inyección",
+    ],
+    inversion: 4,
+    operacional: 3,
+  },
+  {
+    id: 5,
+    nombre: "Mejora envolvente",
+    icono: new URL("../assets/img/icono_mejora_envolvente.svg", import.meta.url)
+      .href,
+    descripcion:
+      "Por envolvente se entiende al conjunto de partes que dejan pasar el calor desde o hacia la sala de clases, y se compone de : suelo, muros, techo, ductos, ventanas y puertas. Una envolvente correctamente diseñada mantiene la sala más fresca en verano y lo hace reduciendo la radiación solar, reduciendo las infiltraciones de aire caliente y reduciendo la transmisión de cielo y paredes. Mientras que en invierno, un buena envolvente deja pasar la radiación solar, mientras que evita la conducción a través de muros y cielo, y también evita las infiltraciones de aire frío.",
+    advertencias: [
+      "Mejorar la envolvente muchas veces significa incrementar la hermeticidad de la sala. Y como los alumnos generan humedad y CO2, sin un sistema de ventilación mecánica, esto significará un disconfort muy elevado",
+    ],
+    recomendaciones: [
+      "Considere instalar un sistema de ventilación mecánica para evitar la sensación de encierro",
+      "Por órden de costo-beneficio, las medidas son: sello de puertas y ventanas, aislación del techo, protección solar, aislación de muros, recambio de ventanas",
+    ],
+    inversion: 5,
+    operacional: 0,
+  },
+  {
+    id: 6,
+    nombre: "Absorbedor acústico",
+    icono: new URL("../assets/img/icono_mejora_absorbedor.svg", import.meta.url)
+      .href,
+    descripcion:
+      "Un absorbedor acústico es una solución que reduce la reberveración mediante la absorción del sonido. Los absorvedores existen en distintos formatos y materiales, y pueden ser instalados en techo o muros",
+    advertencias: [""],
+    recomendaciones: [
+      "Instale soluciones sin fibra de vidrio ni materiales que puedan ser nocivos en su respiración",
+    ],
+    inversion: 5,
+    operacional: 0,
+  },
+  {
+    id: 7,
+    nombre: "Aislante acústico",
+    icono: new URL(
+      "../assets/img/icono_mejora_aislante_acust.svg",
+      import.meta.url
+    ).href,
+    descripcion:
+      "Un aislante acústico es una solución que reduce el ruido que ingresa desde el exterior de la sala. Las soluciones de aislación existen en distintos formatos y materiales, y pueden ser instaladas en techo, muros y ventanas, siendo estas últimas las más caras por m2",
+    advertencias: [
+      "Si va a cerrar ventanas para aislar del ruido, considere la ventilación mecánica para evitar concentraciones de CO2 y humedad",
+    ],
+    recomendaciones: [
+      "Aisle sólo los muros más livianos por dónde pasa el sonido, los muros más pesados ya son bastante aislantes al paso del ruido",
+      "Aisle orificios y mantenga ventanas cerradas si hay problemas de ruido",
+    ],
+    inversion: 3,
+    operacional: 0,
+  },
+  {
+    id: 8,
+    nombre: "Recambio luminaria",
+    icono: new URL(
+      "../assets/img/icono_mejora_iluminacion.svg",
+      import.meta.url
+    ).href,
+    descripcion:
+      "Existen múltiples tipos de luminarias, y cada una tiene sus ventajas y desventajas. La mejor solución actual por temas de eficiencia energética es la luminaria LED, pero incluso dentro de la luminaria LED existen múltiples soluciones. Incluso, podría haber alguna solucion que no requiriera el cambio de los soquetes. También hay soluciones específicas para iluminación de pizarras, y son distintas a la luminaria de uso general",
+    advertencias: [
+      "Seleccionar un tipo inadecuado de luminaria puede generar encandilamiento o incrementar su consumo de energía",
+    ],
+    recomendaciones: [
+      "Utilice luminarias LED de uso general frío para el espacio. La luz fría genera activación, mientras que luz cálida genera calma",
+    ],
+    inversion: 3,
+    operacional: 1,
+  },
+]
+const problemas = [
+  {
+    id: 1,
+    nombre: "Exceso de humedad y/o CO2",
+    descripcion:
+      "El exceso de humedad incrementa el tiempo de remanencia de virus y bacterias en el aire y puede incluso generar ambientes propicios para la proliferación de hongos que afectan el sistema respiratorio y le quitan vida útil a la infraestructura. Por otro lado, el exceso de CO2 desplaza la cantidad de oxígeno disponible para la respiración. El oxígeno es necesario para cualquier actividad muscular o cerebral. Si el cerebro no recibe suficiente oxígeno disminuye su capacidad de atención y retención de manera muy pronunciada.",
+    criterio: {
+      co2: 70,
+      humedad: 70,
+    },
+    mejoras: [1, 2],
+  },
+  {
+    id: 2,
+    nombre: "Temperatura muy alta",
+    descripcion:
+      "Una temperatura por encima del nivel de confort agita el sistema respiratorio y cardiaco para incrementar la exudación y bajar la temperatura del cuerpo. Este trabajo adicional incrementa el consumo energético instantáneo, lo que reduce la energía disponible para otras actividades, como poner atención. Finalmente el incremento de gasto energético sumado a la falta de foco termina por generar la sensación de somnolencia.",
+    criterio: {
+      calor: 70,
+    },
+    mejoras: [5, 3],
+  },
+  {
+    id: 3,
+    nombre: "Temperatura muy baja",
+    descripcion:
+      "La temperatura por debajo del nivel de confort hace que parte de la actividad cerebral se concentre en guardar el calor, y or otra parte el aire frío irrita las vías pulmonares, facilitando el contagio entre los habitantes del aula.",
+    criterio: {
+      frio: 70,
+    },
+    mejoras: [5, 4],
+  },
+  {
+    id: 4,
+    nombre: "Baja inteligibilidad",
+    descripcion:
+      "Usualmente las salas que tienen paredes poco porososas y muy pesadas suelen ser espacios con alta reverberación y baja inteligibilidad. Esto quiere decir que si el profesor habla, lo más probable es que la persona de la última fila entienda muy poco o nada de lo que se está diciendo.",
+    criterio: {
+      inteligibilidad: 70,
+    },
+    mejoras: [6],
+  },
+  {
+    id: 5,
+    nombre: "Baja iluminacion en plano y/o en pizarra",
+    descripcion:
+      "La iluminación en el plano afecta el esfuerzo que debe hacer el ojo para extraer la información de los cuadernos. Una iluminación deficiente incremeta el estrés ocular y genera una disminución notoria la eficiencia de tareas que requieren alta pscicomotricidad (como escribir o dibujar). Mientras que la iluminación en la pizarra afecta cómo se percibe el contenido expuesto por el profesor, sobre todo a las personas que no están en la primera fila.",
+    criterio: {
+      iluminacionPlano: 200,
+      iluminacionPizarra: 200,
+    },
+    mejoras: [8],
+  },
+  {
+    id: 6,
+    nombre: "Exceso de ruido desde el exterior",
+    descripcion:
+      "Una mala aislación acústica del exterior hace que el ruido al interior del aula sea muy fuerte. Esto hace que el mensaje del profesor sea menos inteligible y que requiera más esfuerzo de su parte para ser escuchado en todas partes. Las aberturas en muros, como ventanas o ductos pueden ser buenos conductores acústicos.",
+    criterio: {
+      ruidoExterior: 0.5,
+    },
+    mejoras: [7],
+  },
+]
 
 function getGeneralScore() {
   const ponds = {
@@ -372,14 +626,14 @@ function generateRandomResults(diasLaborables, npersonas) {
   return results
 }
 
-function parseConfort(series) {
-  const limitValues = {
-    calor: [24, 27, 30],
-    frio: [18, 16, 14],
-    humedad: [60, 75, 90],
-    co2: [1000, 1500, 2000],
-    ruido: [40, 50, 60],
-  }
+const limitValues = {
+  calor: [24, 27, 30],
+  frio: [18, 16, 14],
+  humedad: [60, 75, 90],
+  co2: [1000, 1500, 2000],
+  ruido: [40, 50, 60],
+}
+function parseConfort(series, horario) {
   const results = {
     calor: [0, 0, 0, 0],
     frio: [0, 0, 0, 0],
@@ -388,90 +642,76 @@ function parseConfort(series) {
     ruido: [0, 0, 0, 0],
   }
 
+  let nUso
   Object.keys(series).map((type) => {
     let it = 0
+    nUso = 0
     if (type === "tiempo") return
     series[type].map((value) => {
-      if (type == "temperatura") {
-        if (value < limitValues["calor"][0]) {
-          results["calor"][0]++
-        } else if (
-          value >= limitValues["calor"][0] &&
-          value <= limitValues["calor"][1]
-        ) {
-          results["calor"][1]++
-        } else if (
-          value >= limitValues["calor"][1] &&
-          value <= limitValues["calor"][2]
-        ) {
-          results["calor"][2]++
+      if (horario[it] == 1) {
+        nUso++
+        if (type == "temperatura") {
+          if (value < limitValues["calor"][0]) {
+            results["calor"][0]++
+          } else if (
+            value >= limitValues["calor"][0] &&
+            value <= limitValues["calor"][1]
+          ) {
+            results["calor"][1]++
+          } else if (
+            value >= limitValues["calor"][1] &&
+            value <= limitValues["calor"][2]
+          ) {
+            results["calor"][2]++
+          } else {
+            results["calor"][3]++
+          }
+          if (value > limitValues["frio"][0]) {
+            results["frio"][0]++
+          } else if (
+            value <= limitValues["frio"][0] &&
+            value >= limitValues["frio"][1]
+          ) {
+            results["frio"][1]++
+          } else if (
+            value <= limitValues["frio"][1] &&
+            value >= limitValues["frio"][2]
+          ) {
+            results["frio"][2]++
+          } else {
+            results["frio"][3]++
+          }
         } else {
-          results["calor"][3]++
-        }
-        if (value > limitValues["frio"][0]) {
-          results["frio"][0]++
-        } else if (
-          value <= limitValues["frio"][0] &&
-          value >= limitValues["frio"][1]
-        ) {
-          results["frio"][1]++
-        } else if (
-          value <= limitValues["frio"][1] &&
-          value >= limitValues["frio"][2]
-        ) {
-          results["frio"][2]++
-        } else {
-          results["frio"][3]++
-        }
-      } else {
-        if (value < limitValues[type][0]) {
-          results[type][0]++
-        } else if (
-          value >= limitValues[type][0] &&
-          value <= limitValues[type][1]
-        ) {
-          results[type][1]++
-        } else if (
-          value >= limitValues[type][1] &&
-          value <= limitValues[type][2]
-        ) {
-          results[type][2]++
-        } else {
-          results[type][3]++
+          if (value < limitValues[type][0]) {
+            results[type][0]++
+          } else if (
+            value >= limitValues[type][0] &&
+            value <= limitValues[type][1]
+          ) {
+            results[type][1]++
+          } else if (
+            value >= limitValues[type][1] &&
+            value <= limitValues[type][2]
+          ) {
+            results[type][2]++
+          } else {
+            results[type][3]++
+          }
         }
       }
+      it++
     })
   })
   Object.keys(results).map((type) => {
     let it = 0
-    results[type][0] = (results[type][0] / series["tiempo"].length) * 100
-    results[type][1] = (results[type][1] / series["tiempo"].length) * 100
-    results[type][2] = (results[type][2] / series["tiempo"].length) * 100
-    results[type][3] = (results[type][3] / series["tiempo"].length) * 100
+    results[type][0] = (results[type][0] / nUso) * 100
+    results[type][1] = (results[type][1] / nUso) * 100
+    results[type][2] = (results[type][2] / nUso) * 100
+    results[type][3] = (results[type][3] / nUso) * 100
   })
   return results
 }
 const generateFullData = async (nb, nf, nc, np) => {
-  const mejorasActivas = [
-    {
-      nombre: "Iluminación en pizarra",
-      score: 4,
-      tipo: "iluminacion",
-      descripcion: "",
-    },
-    {
-      nombre: "Iluminación LED",
-      score: 4,
-      tipo: "iluminacion",
-      descripcion: "",
-    },
-    {
-      nombre: "Iluminación en pizarra",
-      score: 4,
-      tipo: "iluminacion",
-      descripcion: "",
-    },
-  ]
   let school = {
     edificios: [],
     estadoSensores: {
@@ -479,7 +719,6 @@ const generateFullData = async (nb, nf, nc, np) => {
       notOk: 0,
     },
   }
-
   const totalSalas = nb * nf * nc // para ciclo completo 1 letra al menos son 14 salas considerando prekinder y kinder
   const nivelesPosibles = [
     { nombre: "prekinder", cantidad: 0, letra: "A", niveles: [] },
@@ -514,7 +753,7 @@ const generateFullData = async (nb, nf, nc, np) => {
     j = j < nivelesPosibles.length - 1 ? j + 1 : 0
   }
   const totalAlumnos = totalSalas * np
-  console.log(niveles)
+  //console.log(niveles)
   let cursos = []
   let students = []
   let teachers = []
@@ -529,49 +768,53 @@ const generateFullData = async (nb, nf, nc, np) => {
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1,
       0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ],
     [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1,
       0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ],
     [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1,
       0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ],
     [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1,
       0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ],
     [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ],
     [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ],
     [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ],
   ]
 
   //const ventSeries = generateRandomSeries(horarioDefault, true, new Date())
   //const unventSeries = generateRandomSeries(horarioDefault, false, new Date())
-  const feriados = await getFeriados()
+  const feriadosLegales = await getFeriados()
+  const vacacionesInvierno = getVacacionesInvierno()
+  const feriados = feriadosLegales.concat(vacacionesInvierno)
+
+  //console.log(feriados)
   const diasLaborables = getNDiasLaborables(feriados)
   for (let bi = 0; bi < nb; bi++) {
     letter = getNextChar(letter)
@@ -621,7 +864,7 @@ const generateFullData = async (nb, nf, nc, np) => {
               N: {
                 solucion:
                   materialidades[faker.datatype.number({ min: 0, max: 2 })],
-                vano: faker.datatype.number({ min: 0, max: 45 }),
+                vano: 0,
                 condicion:
                   condiciones[faker.datatype.number({ min: 0, max: 1 })],
                 soleado: faker.datatype.boolean(),
@@ -653,7 +896,7 @@ const generateFullData = async (nb, nf, nc, np) => {
               S: {
                 solucion:
                   materialidades[faker.datatype.number({ min: 0, max: 2 })],
-                vano: faker.datatype.number({ min: 0, max: 45 }),
+                vano: 0,
                 condicion:
                   condiciones[faker.datatype.number({ min: 0, max: 1 })],
                 soleado: faker.datatype.boolean(),
@@ -706,13 +949,16 @@ const generateFullData = async (nb, nf, nc, np) => {
             orientacion: 0,
           },
           datosIniciales: {
-            iluminacionPlano: faker.datatype.number({ min: 50, max: 400 }),
-            iluminacionPizarra: faker.datatype.number({ min: 100, max: 400 }),
+            iluminacionPlano: faker.datatype.number({ min: 50, max: 300 }),
+            iluminacionPizarra: faker.datatype.number({ min: 50, max: 300 }),
             inteligibilidad: faker.datatype.number({
               min: 0,
-              max: 100,
+              max: 80,
             }),
-            luminaria: "tubo T8",
+            luminaria: {
+              tipo: "tubo T8",
+              cantidad: faker.datatype.number({ min: 18, max: 22 }),
+            },
             calefaccion: {
               estado: false,
               tipo: "",
@@ -730,31 +976,47 @@ const generateFullData = async (nb, nf, nc, np) => {
           },
         }
 
-        const series = generateRandomSeries(
+        const seriesData = generateRandomSeries(
           horarioDefault,
           Math.random() > 0.7,
           new Date(),
           feriados
         )
+        //console.log(seriesData)
 
         niveles[cii - 1].sala = classroom
 
         classroom.estructura.muros.cielo.soleado = fi < nf ? false : true
         classroom.estructura.muros.cielo.condicion =
           fi < nf ? "al interior" : "al exterior"
-        classroom.series = series
-
-        const classAlerts = parseAlerts(classroom.nombre, series)
+        classroom.series = seriesData.series
+        classroom.tiempoUso = seriesData.tiempoUso
+        //console.log(seriesData.series)
+        const classAlerts = parseAlerts(classroom.nombre, seriesData.series)
 
         classroom.alertas = classAlerts
 
-        alerts.push(classAlerts)
+        //alerts.push(classAlerts)
+        alerts = alerts.concat(classAlerts)
 
         classroom.mensajes.alerts = classAlerts.length
 
-        classroom.estado = parseConfort(classroom.series)
+        classroom.estado = parseConfort(classroom.series, classroom.tiempoUso)
 
         classroom.estado.general = getGeneralConfort(classroom.estado)
+
+        classroom.indicadoresMejoras = {
+          iluminacionPlano: classroom.datosIniciales.iluminacionPlano,
+          iluminacionPizarra: classroom.datosIniciales.iluminacionPizarra,
+          inteligibilidad: classroom.datosIniciales.inteligibilidad,
+          frio: getScore(classroom.estado.frio),
+          calor: getScore(classroom.estado.calor),
+          humedad: getScore(classroom.estado.calor),
+          co2: getScore(classroom.estado.co2),
+          ruido: getScore(classroom.estado.ruido),
+        }
+
+        classroom.problemas = getProblemas(classroom.indicadoresMejoras)
 
         classroom.sensorOK
           ? school.estadoSensores.ok++
@@ -772,9 +1034,20 @@ const generateFullData = async (nb, nf, nc, np) => {
         for (let pi = 0; pi < np; pi++) {
           let person = {
             nombre: faker.name.firstName(),
-            apellido: faker.name.lastName(),
+            apellidoPaterno: faker.name.lastName(),
+            apellidoMaterno: faker.name.lastName(),
             ausentismo: faker.random.numeric({ min: 0, max: 5 }),
+            isActive: Math.random() > 0.3,
           }
+          person.padre = {
+            nombre: faker.name.firstName({ sex: "male" }),
+            apellido: person.apellidoPaterno,
+          }
+          person.madre = {
+            nombre: faker.name.firstName({ sex: "female" }),
+            apellido: person.apellidoMaterno,
+          }
+          person.apoderado = faker.random.numeric({ min: 0, max: 1 })
           classroom.estudiantes.push(person)
           students.push(person)
         }
@@ -808,6 +1081,8 @@ const generateFullData = async (nb, nf, nc, np) => {
     classrooms,
     alerts,
     niveles: nivelesPosibles,
+    mejoras,
+    problemas,
   }
 }
 

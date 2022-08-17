@@ -15,10 +15,12 @@
 </template>
 <script setup>
 import { ref, watch } from "vue"
-import "echarts"
+import * as echarts from "echarts/core"
+import "echarts/lib/chart/line"
+
+//import { yAxis } from "echarts/components"
 import { VueEcharts } from "vue3-echarts"
 import moment from "moment"
-
 const props = defineProps([
   "seriesData",
   "timeData",
@@ -29,40 +31,82 @@ const props = defineProps([
   "firstMoment",
   "yRange",
   "confortBands",
+  "bloquesHorarios",
 ])
 
-let yAxisData = props.seriesData
-let xAxisData = props.timeData
+let yAxisData = []
+//let xAxisData = props.timeData
+let xAxisData = []
+
+for (let i = 0; i < props.timeData.length; i++) {
+  const dateTime = moment(props.timeData[i]).format("YYYY-MM-DD HH:mm")
+  xAxisData.push(dateTime)
+  yAxisData.push([dateTime, props.seriesData[i]])
+}
+
+//console.log(yAxisData)
 
 const loadingChart = ref(true)
 
 //console.log(props.yRange)
 const linePlot = ref()
 
-const newData = setTimeWindow(props.ventana, props.firstMoment)
+function getBlocks(fullTimeStrip) {
+  // timestrip contiene un array de bloques de tiempo de la forma:
+  /*
+    0 => [0,1,...], lunes,
+    1 => [0,1,...], martes,
+    ...
+    6 => [0,1,...], domingo,
+  */
+  let blocks = []
+  let ti = new Date(new Date().getFullYear(), 0, 1, 0, 0, 0, 0)
+  let t
+  //console.log(hi)
+  let block
+  for (let i = 0; i < fullTimeStrip.length; i++) {
+    t = new Date(ti.getTime() + (i * 1000 * 3600) / 4)
 
+    if (fullTimeStrip[i] == 1 && fullTimeStrip[i - 1] == 0) {
+      block = { hi: t, hf: 0 }
+    }
+    if (fullTimeStrip[i] == 1 && fullTimeStrip[i + 1] == 0) {
+      block.hf = new Date(ti.getTime() + ((i + 1) * 1000 * 3600) / 4)
+      blocks.push(block)
+    }
+  }
+  return blocks
+}
+
+const blocks = getBlocks(props.bloquesHorarios)
+//console.log(blocks)
+//let xRange = setTimeWindow(props.ventana, props.firstMoment)
+//console.log(xRange)
 linePlot.value = getNewChart(
-  newData.time,
-  newData.data,
+  xAxisData,
+  yAxisData,
   props.unidad,
+  //xRange,
   props.yRange,
   props.decimales,
-  props.confortBands
+  props.confortBands,
+  blocks
 )
-
+setTimeWindow(props.ventana, props.firstMoment)
 watch(props, function (newVal) {
-  if (props.ventana) {
-    loadingChart.value = true
-    const newData = setTimeWindow(props.ventana, props.firstMoment)
+  if (newVal.ventana) {
+    //xRange = setTimeWindow(props.ventana, props.firstMoment)
     linePlot.value = getNewChart(
-      newData.time,
-      newData.data,
+      xAxisData,
+      yAxisData,
       props.unidad,
+      //xRange,
       props.yRange,
       props.decimales,
-      props.confortBands
+      props.confortBands,
+      blocks
     )
-    loadingChart.value = false
+    setTimeWindow(props.ventana, props.firstMoment)
   }
 })
 
@@ -80,49 +124,60 @@ function setTimeWindow(mode, firstMoment) {
     case "semana":
       firstMoment = firstMoment
         ? firstMoment
-        : moment(new Date()).subtract(1, "weeks")
+        : moment(new Date()).startOf("week")
       firstMoment =
         firstMoment >= moment(new Date()).subtract(1, "weeks")
-          ? moment(new Date()).subtract(1, "weeks")
+          ? moment(new Date()).startOf("week")
           : firstMoment
       lastMoment = moment(firstMoment).add(1, "weeks")
       break
     case "anyo":
-      firstMoment = firstMoment
-        ? firstMoment
-        : moment(new Date()).subtract(1, "years")
+      const comienzoAnyo = moment(new Date(new Date().getFullYear(), 0, 0))
+      firstMoment = firstMoment ? firstMoment : comienzoAnyo
       firstMoment =
         firstMoment >= moment(new Date()).subtract(1, "years")
-          ? moment(new Date()).subtract(1, "years")
+          ? comienzoAnyo
           : firstMoment
       lastMoment = moment(firstMoment).add(1, "years")
       break
   }
-  let auxData = []
-  let auxTime = []
+  console.log(firstMoment)
+  linePlot.value.xAxis.min = firstMoment.format("YYYY-MM-DD HH:mm")
+  linePlot.value.xAxis.max = lastMoment.format("YYYY-MM-DD HH:mm")
+
+  /*return [
+    firstMoment.format("YYYY-MM-DD HH:mm"),
+    lastMoment.format("YYYY-MM-DD HH:mm"),
+  ]*/
+  /*linePlot.value.xAxis.min = firstMoment.format("YYYY-MM-DD HH:mm")
+  linePlot.value.xAxis.max = lastMoment.format("YYYY-MM-DD HH:mm")*/
+  //let auxData = []
+  //let auxTime = []
   //console.log(firstMoment)
   //console.log(lastMoment)
-  for (let i = 0; i < yAxisData.length; i++) {
+  /*for (let i = 0; i < yAxisData.length; i++) {
     if (moment(xAxisData[i]).isBetween(firstMoment, lastMoment)) {
       auxData.push(yAxisData[i])
       auxTime.push(xAxisData[i])
     }
-  }
+  }*/
   //console.log(auxData)
   //console.log(auxTime)
-  return {
+  /*return {
     data: auxData,
     time: auxTime,
-  }
+  }*/
 }
 
 function getNewChart(
   xAxisData,
   yAxisData,
   unidad,
+  //xRange,
   yRange,
   decimales,
-  confortBands
+  confortBands,
+  bloquesHorarios
 ) {
   let chart = {
     loadingOption: {
@@ -133,14 +188,16 @@ function getNewChart(
       zlevel: 0,
     },
     xAxis: {
-      type: "category",
-      //showGrid: false,
-      /*splitLine: {
-      show: false,
-    },*/
-      data: xAxisData,
+      type: "time",
       formatter: function (value) {
-        return value
+        return moment(value).format("Y-m-d HH:mm")
+      },
+      /*min: xRange[0],
+      max: xRange[1],*/
+      axisLabel: {
+        formatter: function (value) {
+          return moment(new Date(value)).format("Y-MM-DD HH:mm")
+        },
       },
     },
     yAxis: {
@@ -174,12 +231,11 @@ function getNewChart(
       containLabel: true,
     },
     tooltip: {
-      trigger: "item",
-      //formatter: ([{ b: b }, { c: c }]) => `${b}<br/>${c.toFixed(2)}`,
-      //valueFormatter: (value) => value.toFixed(2),
-      //formatter: "{b}: {c}%", //{a} <br/>{b}: {c}
+      trigger: "axis",
       formatter: function (obj) {
-        return obj.name + " : " + obj.value.toFixed(decimales) + unidad
+        return (
+          obj[0].data[0] + " : " + obj[0].data[1].toFixed(decimales) + unidad
+        )
       },
       axisPointer: {
         type: "cross",
@@ -197,10 +253,12 @@ function getNewChart(
         type: "line",
         data: yAxisData,
         lineStyle: {
-          width: 0.5,
+          width: 1,
         },
-
-        markArea: { data: [] },
+        markArea: {
+          data: [],
+        },
+        symbol: "none",
       },
     ],
     visualMap: {
@@ -230,6 +288,24 @@ function getNewChart(
     }
     chart.visualMap.pieces.push(visualRange)
   })
+  bloquesHorarios.map((bloque) => {
+    const colorBand = [
+      {
+        xAxis: bloque.hi, //"2022-08-09 08:30",
+        itemStyle: {
+          color: "#ccc",
+        },
+      },
+      {
+        xAxis: bloque.hf, //"2022-08-09 09:30",
+        itemStyle: {
+          color: "#ccc",
+        },
+      },
+    ]
+    chart.series[0].markArea.data.push(colorBand)
+  })
+
   return chart
 }
 </script>

@@ -19,24 +19,31 @@
       <ul>
         <li
           class="rounded-lg border-white border-2 text-white hover:bg-white hover:text-blue-900 w-14 h-14 mb-10 flex text-2xl flex-wrap items-center justify-center place-item-end"
+          :class="{
+            'bg-blue-900': url_active('/plataforma/perfil'),
+          }"
         >
-          <a class="block text-2xl" href=""> DM </a>
+          <router-link :to="'/plataforma/perfil'" class="block text-2xl">
+            DM
+          </router-link>
         </li>
         <li class="mb-8">
-          <a
-            href="#"
+          <router-link
+            :to="'/plataforma/alertas'"
+            :class="{ 'bg-blue-900': url_active('/plataforma/alertas') }"
             class="text-white flex flex-wrap justify-center h-14 w-14 hover:bg-blue-900 rounded-lg"
           >
             <img src="@/assets/img/icono_campana.svg" class="w-3/4" alt="" />
-          </a>
+          </router-link>
         </li>
         <li class="mb-8">
-          <a
-            href="#"
+          <router-link
+            :to="'/plataforma/admin'"
+            :class="{ 'bg-blue-900': url_active('/plataforma/admin') }"
             class="text-white flex flex-wrap justify-center h-14 w-14 hover:bg-blue-900 rounded-lg"
           >
             <img src="@/assets/img/icono_setup.svg" class="w-3/4" alt="" />
-          </a>
+          </router-link>
         </li>
       </ul>
     </nav>

@@ -42,6 +42,12 @@
         <div class="flex justify-center mt-5">
           <div
             class="mt-5 h-8 w-1/3 px-10 cursor-pointer flex items-center bg-teal-500 rounded-full justify-center hover:bg-teal-400 text-white"
+            @click="
+              emitter.emit('addAlert', {
+                type: 'success',
+                txt: 'isDemo',
+              })
+            "
           >
             Agregar edificio
           </div>
@@ -94,6 +100,12 @@
               <div class="w-10 flex justify-center items-center">
                 <div
                   class="h-full bg-teal-500 hover:bg-teal-400 text flex justify-center items-center p-2 w-10 text-white cursor-pointer"
+                  @click="
+                    emitter.emit('addAlert', {
+                      type: 'success',
+                      txt: 'isDemo',
+                    })
+                  "
                 >
                   +
                 </div>
@@ -287,7 +299,15 @@
           <div class="flex w-full mt-10 mb-5 justify-center items-center">
             <h3 class="text-2xl text-gray-600 flex">
               {{ selectedStructure.nombre }}
-              <a href=""><PencilAltIcon class="h-7 w-7 text-sky-500 ml-2" /></a>
+              <a
+                @click="
+                  emitter.emit('addAlert', {
+                    type: 'success',
+                    txt: 'isDemo',
+                  })
+                "
+                ><PencilAltIcon class="h-7 w-7 text-sky-500 ml-2"
+              /></a>
             </h3>
           </div>
           <div></div>
@@ -323,10 +343,11 @@ import {
   UserIcon,
 } from "@heroicons/vue/solid"
 
-//TODO: Hacer una funcion que ordene por confort y que me devuelva el array ordenado
+const emitter = inject("emitter")
+
 const data = inject("data")
 const limitValues = inject("limitValues")
-
+console.log(data)
 const search = ref("")
 const selectedStructure = ref()
 const selectedStructureType = ref()

@@ -32,8 +32,13 @@
               v-for="(dim, index) in data.school.estado"
               :key="index"
             >
-              <donnut :data="dim" :icon="iconos[index]" />
+              <donnut
+                v-if="index !== 'general'"
+                :data="dim"
+                :icon="iconos[index]"
+              />
               <router-link
+                v-if="index !== 'general'"
                 class="text-gray-500 bg-white border-2 border-gray-500 py-2 px-5 w-28 rounded-full hover:bg-gray-500 hover:text-white"
                 :to="'/plataforma/salas/' + index"
               >
@@ -47,6 +52,7 @@
             "#8CC63F", "#FAEC21", "#F5911E", "#BF272D"
           </div>-->
         </div>
+        <!--
         <h3 class="font-ailerons text-2xl bg-white text-left mt-10">
           Recomendaciones activas
         </h3>
@@ -111,7 +117,7 @@
             </div>
           </div>
         </div>
-
+        -->
         <!--
         <h3 class="font-ailerons text-2xl bg-white text-left">
           Recomendaciones pasivas
@@ -176,7 +182,8 @@
       </div>
       <div class="h-screen w-1/5 fixed right-0 top-0 bg-gray-100 p-10">
         <netstats :data="data.school.estadoSensores"></netstats>
-        <alerts :data="data.alerts"></alerts>
+        <h3 class="font-ailerons text-4xl text-left">Alertas</h3>
+        <alerts :data="data.alerts" :alertsNumber="9"></alerts>
       </div>
     </div>
   </div>
@@ -196,6 +203,8 @@ const staticData = ref()
 staticData.value = [25, 25, 25, 25]
 
 const data = inject("data")
+
+console.log(data)
 
 const general = ref()
 general.value = {

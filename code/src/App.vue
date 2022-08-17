@@ -1,6 +1,6 @@
 <template>
   <div ref="root">
-    <div class="w-full absolute top-0 z-10">
+    <div class="w-full sticky top-0 z-50">
       <AlertComp ref="alertComp" />
     </div>
     <div class="flex">
@@ -62,7 +62,8 @@ onMounted(() => {
 h2,
 h3,
 h4,
-h5 {
+h5,
+b {
   font-family: CooperHewittTitle;
 }
 #app {

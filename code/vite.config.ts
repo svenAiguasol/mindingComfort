@@ -37,6 +37,7 @@ export default defineConfig({
       host: "localhost",
       protocol: "ws",
       port: 8090,
+      overlay: false,
     },
   },
 })

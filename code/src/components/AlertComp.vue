@@ -28,7 +28,14 @@ colors.value = {
   info: "bg-blue-500",
 }
 emitter.on("addAlert", (e) => {
-  alerts.value.push(e)
+  if (e.txt == "isDemo") {
+    alerts.value.push({
+      type: "success",
+      txt: "Acción no disponible en la demo, consulte por el servicio a través del formulario de la página principal",
+    })
+  } else {
+    alerts.value.push(e)
+  }
   setTimeout(function () {
     alerts.value.pop()
   }, 5000)
