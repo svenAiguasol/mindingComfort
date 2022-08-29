@@ -22,7 +22,7 @@
               />
               <router-link
                 class="text-gray-500 bg-white border-2 w-28 border-gray-500 py-2 px-5 rounded-full hover:bg-gray-500 hover:text-white"
-                :to="'/plataforma/salas/general'"
+                :to="'/plataforma-administrador/salas/general'"
               >
                 general
               </router-link>
@@ -40,7 +40,7 @@
               <router-link
                 v-if="index !== 'general'"
                 class="text-gray-500 bg-white border-2 border-gray-500 py-2 px-5 w-28 rounded-full hover:bg-gray-500 hover:text-white"
-                :to="'/plataforma/salas/' + index"
+                :to="'/plataforma-administrador/salas/' + index"
               >
                 {{ index }}
               </router-link>

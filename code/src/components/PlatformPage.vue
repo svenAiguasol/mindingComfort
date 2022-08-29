@@ -20,17 +20,22 @@
         <li
           class="rounded-lg border-white border-2 text-white hover:bg-white hover:text-blue-900 w-14 h-14 mb-10 flex text-2xl flex-wrap items-center justify-center place-item-end"
           :class="{
-            'bg-blue-900': url_active('/plataforma/perfil'),
+            'bg-blue-900': url_active('/plataforma-administrador/perfil'),
           }"
         >
-          <router-link :to="'/plataforma/perfil'" class="block text-2xl">
+          <router-link
+            :to="'/plataforma-administrador/perfil'"
+            class="block text-2xl"
+          >
             DM
           </router-link>
         </li>
         <li class="mb-8">
           <router-link
-            :to="'/plataforma/alertas'"
-            :class="{ 'bg-blue-900': url_active('/plataforma/alertas') }"
+            :to="'/plataforma-administrador/alertas'"
+            :class="{
+              'bg-blue-900': url_active('/plataforma-administrador/alertas'),
+            }"
             class="text-white flex flex-wrap justify-center h-14 w-14 hover:bg-blue-900 rounded-lg"
           >
             <img src="@/assets/img/icono_campana.svg" class="w-3/4" alt="" />
@@ -38,8 +43,10 @@
         </li>
         <li class="mb-8">
           <router-link
-            :to="'/plataforma/admin'"
-            :class="{ 'bg-blue-900': url_active('/plataforma/admin') }"
+            :to="'/plataforma-administrador/admin'"
+            :class="{
+              'bg-blue-900': url_active('/plataforma-administrador/admin'),
+            }"
             class="text-white flex flex-wrap justify-center h-14 w-14 hover:bg-blue-900 rounded-lg"
           >
             <img src="@/assets/img/icono_setup.svg" class="w-3/4" alt="" />
@@ -69,22 +76,22 @@ menu.value = [
   {
     icon: new URL("../assets/img/icono_home.svg", import.meta.url).href,
     name: "Dashboard",
-    path: "/plataforma/dashboard",
+    path: "/plataforma-administrador/dashboard",
   },
   {
     icon: new URL("../assets/img/icono_silla.svg", import.meta.url).href,
     name: "Salas",
-    path: "/plataforma/salas",
+    path: "/plataforma-administrador/salas",
   },
   /*{
     icon: new URL("../assets/img/icono_alumno.svg", import.meta.url).href,
     name: "Personas",
-    path: "/plataforma/personas",
+    path: "/plataforma-administrador/personas",
   },
   {
     icon: new URL("../assets/img/icono_reporte.svg", import.meta.url).href,
     name: "Reportes",
-    path: "/plataforma/reportes",
+    path: "/plataforma-administrador/reportes",
   },*/
 ]
 

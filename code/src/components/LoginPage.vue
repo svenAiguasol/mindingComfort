@@ -55,9 +55,17 @@ function login() {
   if (form.value.user == "") {
     emitter.emit("addAlert", { type: "error", txt: "Ingrese un usuario" })
   }
-  if (form.value.user == "demo" && form.value.pass == "demo") {
+  if (form.value.user == "administrador" && form.value.pass == "demo") {
     localStorage.setItem("token", "demo")
-    location.href = "plataforma/dashboard"
+    location.href = "plataforma-administrador/dashboard"
+  } else if (form.value.user == "apoderado" && form.value.pass == "demo") {
+    localStorage.setItem("token", "demo")
+    location.href = "plataforma-apoderados/pupilos"
+  } else {
+    emitter.emit("addAlert", {
+      type: "error",
+      txt: "Usuario o contraseña incorrectos",
+    })
   }
 }
 </script>

@@ -104,7 +104,7 @@
               <div class="grow flex justify-center items-center"></div>
               <router-link
                 class="w-24 bg-teal-500 hover:bg-teal-400 text-white rounded-r-full flex justify-center items-center cursor-pointer"
-                :to="'/plataforma/salas/'"
+                :to="'/plataforma-administrador/salas/'"
                 @click="selectPerson('nivel', nivel)"
               >
                 ver
@@ -154,7 +154,7 @@
                   <div class="grow flex justify-center items-center"></div>
                   <router-link
                     class="w-24 bg-teal-500 hover:bg-teal-400 text-white rounded-r-full flex justify-center items-center cursor-pointer"
-                    :to="'/plataforma/salas/'"
+                    :to="'/plataforma-administrador/salas/'"
                     @click="selectPerson('curso', curso)"
                   >
                     ver
@@ -192,7 +192,8 @@
                       <router-link
                         class="w-24 bg-teal-500 hover:bg-teal-400 text-white rounded-r-full flex justify-center items-center cursor-pointer"
                         :to="
-                          '/plataforma/personas/ver/' + curso.profesorJefe.id
+                          '/plataforma-administrador/personas/ver/' +
+                          curso.profesorJefe.id
                         "
                         @click="selectPerson('profesor', curso.profesorJefe.id)"
                       >
@@ -235,7 +236,9 @@
                       <div class="grow flex justify-center items-center"></div>
                       <router-link
                         class="w-24 bg-teal-500 hover:bg-teal-400 text-white rounded-r-full flex justify-center items-center cursor-pointer"
-                        :to="'/plataforma/personas/ver/' + alumno.id"
+                        :to="
+                          '/plataforma-administrador/personas/ver/' + alumno.id
+                        "
                         @click="selectPerson('alumno', alumno)"
                       >
                         ver

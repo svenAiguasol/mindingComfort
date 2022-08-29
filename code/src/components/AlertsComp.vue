@@ -36,7 +36,7 @@
       <router-link
         class="bg-white border-2 border-sky-500 text-sky-500 hover:bg-sky-500 hover:text-white rounded-full p-2 px-10"
         v-if="data.length > alertsNumber"
-        :to="'/plataforma/alertas'"
+        :to="'/plataforma-administrador/alertas'"
       >
         Ver todas
       </router-link>

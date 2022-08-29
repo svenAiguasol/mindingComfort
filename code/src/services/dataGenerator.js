@@ -1032,22 +1032,26 @@ const generateFullData = async (nb, nf, nc, np) => {
         piso.salas.push(classroom)
         classrooms.push(classroom)
         for (let pi = 0; pi < np; pi++) {
+          let sex = Math.random() > 0.5 ? "male" : "female"
           let person = {
-            nombre: faker.name.firstName(),
+            nombre: faker.name.firstName(sex),
+            sex: sex,
             apellidoPaterno: faker.name.lastName(),
             apellidoMaterno: faker.name.lastName(),
             ausentismo: faker.random.numeric({ min: 0, max: 5 }),
             isActive: Math.random() > 0.3,
           }
           person.padre = {
-            nombre: faker.name.firstName({ sex: "male" }),
+            nombre: faker.name.firstName("male"),
             apellido: person.apellidoPaterno,
           }
           person.madre = {
-            nombre: faker.name.firstName({ sex: "female" }),
+            nombre: faker.name.firstName("female"),
             apellido: person.apellidoMaterno,
           }
           person.apoderado = faker.random.numeric({ min: 0, max: 1 })
+          person.classRoomId = classroom.id
+          person.classroom = classroom
           classroom.estudiantes.push(person)
           students.push(person)
         }

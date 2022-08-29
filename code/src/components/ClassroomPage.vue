@@ -132,7 +132,7 @@
               <div class="grow flex justify-center items-center"></div>
               <router-link
                 class="w-24 bg-teal-500 hover:bg-teal-400 text-white rounded-r-full flex justify-center items-center cursor-pointer"
-                :to="'/plataforma/salas/'"
+                :to="'/plataforma-administrador/salas/'"
                 @click="selectStructure('building', building)"
               >
                 ver
@@ -186,7 +186,7 @@
                   <div class="grow flex justify-center items-center"></div>
                   <router-link
                     class="w-24 bg-teal-500 hover:bg-teal-400 text-white rounded-r-full flex justify-center items-center cursor-pointer"
-                    :to="'/plataforma/salas/'"
+                    :to="'/plataforma-administrador/salas/'"
                     @click="selectStructure('floor', floor)"
                   >
                     ver
@@ -275,7 +275,9 @@
                       <div class="grow flex justify-center items-center"></div>
                       <router-link
                         class="w-24 bg-teal-500 hover:bg-teal-400 text-white rounded-r-full flex justify-center items-center cursor-pointer"
-                        :to="'/plataforma/salas/ver/' + classroom.id"
+                        :to="
+                          '/plataforma-administrador/salas/ver/' + classroom.id
+                        "
                         @click="selectStructure('classroom', classroom)"
                       >
                         ver
