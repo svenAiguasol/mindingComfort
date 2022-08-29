@@ -27,8 +27,8 @@
             <img
               :src="
                 pup.sex == 'male'
-                  ? 'src/assets/img/perfil_nino_' + (i + 1) + '.jpg'
-                  : 'src/assets/img/perfil_nina_' + (i + 1) + '.jpg'
+                  ? 'assets/img/perfil_nino_' + (i + 1) + '.jpg'
+                  : 'assets/img/perfil_nina_' + (i + 1) + '.jpg'
               "
               class="h-52 rounded-full"
               alt=""
@@ -84,8 +84,8 @@
           <img
             :src="
               pup.sex == 'male'
-                ? 'src/assets/img/perfil_nino_' + (i + 1) + '.jpg'
-                : 'src/assets/img/perfil_nina_' + (i + 1) + '.jpg'
+                ? 'assets/img/perfil_nino_' + (i + 1) + '.jpg'
+                : 'assets/img/perfil_nina_' + (i + 1) + '.jpg'
             "
             class="h-52 rounded-full"
             alt=""
@@ -115,8 +115,8 @@
             <img
               :src="
                 pup.sex == 'male'
-                  ? 'src/assets/img/perfil_nino_' + (i + 1) + '.jpg'
-                  : 'src/assets/img/perfil_nina_' + (i + 1) + '.jpg'
+                  ? 'assets/img/perfil_nino_' + (i + 1) + '.jpg'
+                  : 'assets/img/perfil_nina_' + (i + 1) + '.jpg'
               "
               class="h-52 rounded-full"
               alt=""
